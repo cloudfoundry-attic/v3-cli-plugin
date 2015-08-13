@@ -145,7 +145,6 @@ func push(cliConnection plugin.CliConnection, args []string) {
 	}
 	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", "v2/routes", "-X", "POST", "-d", fmt.Sprintf(`{"host":"%s","domain_guid":"%s","space_guid":"%s"}`, args[1], domainGuid, space.Guid))
 	freakOut(err)
-	fmt.Println("create route output: ", output)
 	route := RouteModel{}
 	err = json.Unmarshal([]byte(output[0]), &route)
 	if err != nil {
