@@ -137,12 +137,7 @@ func push(cliConnection plugin.CliConnection, args []string) {
 			nextUrl = ""
 		}
 	}
-	domainGuid := ""
-	for _, v := range allDomains.Resources {
-		if v.Entity.Name == apiString[11:] {
-			domainGuid = v.Metadata.Guid
-		}
-	}
+	domainGuid := allDomains.Resources[0].Metadata.Guid
 	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", "v2/routes", "-X", "POST", "-d", fmt.Sprintf(`{"host":"%s","domain_guid":"%s","space_guid":"%s"}`, args[1], domainGuid, space.Guid))
 	freakOut(err)
 	route := RouteModel{}
