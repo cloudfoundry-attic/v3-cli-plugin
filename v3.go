@@ -113,7 +113,7 @@ func push(cliConnection plugin.CliConnection, args []string) {
 		freakOut(errors.New("error marshaling the v3 droplet: " + err.Error()))
 	}
 
-	//cf curl /v3/apps/[your-app-guid]/current_droplet -X PUT -d '{"droplet_guid": "[your-droplet-guid]"}'
+	//assign droplet to the app
 	//make a polling loop here maybe?
 	time.Sleep(10 * time.Second)
 	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/current_droplet", app.Guid), "-X", "PUT", "-d", fmt.Sprintf("{\"droplet_guid\":\"%s\"}", droplet.Guid))
@@ -156,6 +156,15 @@ func push(cliConnection plugin.CliConnection, args []string) {
 	freakOut(err)
 
 	fmt.Println("Done pushing! Checkout your processes using 'cf apps'")
+}
+
+func Poll(endpoint string, desired string, timeout time.Duration, timeoutMessage string) {
+	timeElapsed := 0 * time.Second
+	for timeElapsed < timeout {
+
+		timeElapsed = timeElapsed + 1*time.Second
+		time.Sleep(1 * time.Second)
+	}
 }
 
 func freakOut(err error) {
