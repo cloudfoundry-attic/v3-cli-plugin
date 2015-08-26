@@ -101,10 +101,11 @@ func push(cliConnection plugin.CliConnection, args []string) {
 	}
 	_, upload := exec.Command("curl", fmt.Sprintf("%s/v3/packages/%s/upload", apiString, pack.Guid), "-F", fmt.Sprintf("bits=@%s", args[2]), "-H", fmt.Sprintf("Authorization: %s", token)).Output()
 	freakOut(upload)
+	//waiting for cc to pour bits into blobstore
+	Poll(cliConnection, fmt.Sprintf("/v3/packages/%s", pack.Guid), "READY", 1*time.Minute, "Package failed to upload")
 
 	//need to sleep or the CCDB won't be updated before with the bits before we try to make the droplet
 	//make a polling loop here maybe?
-	time.Sleep(5 * time.Second)
 	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/packages/%s/droplets", pack.Guid), "-X", "POST", "-d", "{}")
 	freakOut(err)
 	droplet := V3DropletModel{}
@@ -112,10 +113,11 @@ func push(cliConnection plugin.CliConnection, args []string) {
 	if err != nil {
 		freakOut(errors.New("error marshaling the v3 droplet: " + err.Error()))
 	}
+	//wait for the droplet to be ready
+	Poll(cliConnection, fmt.Sprintf("/v3/droplets/%s", droplet.Guid), "STAGED", 1*time.Minute, "Droplet failed to stage")
 
 	//assign droplet to the app
 	//make a polling loop here maybe?
-	time.Sleep(10 * time.Second)
 	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/current_droplet", app.Guid), "-X", "PUT", "-d", fmt.Sprintf("{\"droplet_guid\":\"%s\"}", droplet.Guid))
 	freakOut(err)
 
@@ -147,7 +149,6 @@ func push(cliConnection plugin.CliConnection, args []string) {
 	}
 
 	//map the route to the app
-	time.Sleep(1 * time.Second)
 	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/routes", app.Guid), "-X", "PUT", "-d", fmt.Sprintf("{\"route_guid\": \"%s\"}", route.Metadata.Guid))
 	freakOut(err)
 
@@ -158,10 +159,14 @@ func push(cliConnection plugin.CliConnection, args []string) {
 	fmt.Println("Done pushing! Checkout your processes using 'cf apps'")
 }
 
-func Poll(endpoint string, desired string, timeout time.Duration, timeoutMessage string) {
+func Poll(cliConnection plugin.CliConnection, endpoint string, desired string, timeout time.Duration, timeoutMessage string) {
 	timeElapsed := 0 * time.Second
 	for timeElapsed < timeout {
-
+		output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", endpoint, "-X", "GET")
+		freakOut(err)
+		if strings.Contains(output[0], desired) {
+			return
+		}
 		timeElapsed = timeElapsed + 1*time.Second
 		time.Sleep(1 * time.Second)
 	}
