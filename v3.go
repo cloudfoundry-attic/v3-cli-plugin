@@ -20,10 +20,16 @@ func (pluginDemo *V3Plugin) Run(cliConnection plugin.CliConnection, args []strin
 			//print push help
 		}
 	} else if args[0] == "v3-apps" {
-		if len(args == 1) {
+		if len(args) == 1 {
 			commands.Apps(cliConnection, args)
 		} else {
 			//print apps help
+		}
+	} else if args[0] == "v3-processes" {
+		if len(args) == 1 {
+			commands.Processes(cliConnection, args)
+		} else {
+			//print processes help
 		}
 	}
 }
@@ -48,10 +54,19 @@ func (pluginDemo *V3Plugin) GetMetadata() plugin.PluginMetadata {
 			},
 			{
 				Name:     "v3-apps",
-				Alias:    "",
-				HelpText: "displays v3 apps in the current space",
+				Alias:    "v3-a",
+				HelpText: "displays all v3 apps",
 				UsageDetails: plugin.Usage{
 					Usage:   "v3-apps",
+					Options: map[string]string{},
+				},
+			},
+			{
+				Name:     "v3-processes",
+				Alias:    "v3-p",
+				HelpText: "displays all v3 processes",
+				UsageDetails: plugin.Usage{
+					Usage:   "v3-processes",
 					Options: map[string]string{},
 				},
 			},

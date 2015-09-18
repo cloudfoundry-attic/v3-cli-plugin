@@ -1,9 +1,26 @@
 package models
 
-type V3AppsModel struct {
+type V3AppModel struct {
 	Name       string
 	Guid       string
 	Error_Code string
+	Processes  string
+	Instances  int `json:"total_desired_instances"`
+}
+
+type V3ProcessModel struct {
+	App    string
+	Type   string
+	Memory int `json:"memory_in_mb"`
+	Disk   int `json:"disk_in_mb"`
+}
+
+type V3AppsModel struct {
+	Apps []V3AppModel `json:"resources"`
+}
+
+type V3ProcessesModel struct {
+	Processes []V3ProcessModel `json:"resources"`
 }
 
 type V3PackageModel struct {

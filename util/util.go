@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jberkhahn/cli/plugin"
+	"github.com/cloudfoundry/cli/plugin"
 )
 
 func Poll(cliConnection plugin.CliConnection, endpoint string, desired string, timeout time.Duration, timeoutMessage string) {

@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/cloudfoundry/cli/cf/app_files"
+	"github.com/cloudfoundry/cli/fileutils"
 	"github.com/cloudfoundry/cli/plugin"
-	"github.com/jberkhahn/cli/fileutils"
 	. "github.com/jberkhahn/v3_beta/models"
 	. "github.com/jberkhahn/v3_beta/util"
 )
@@ -25,7 +25,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	//create the app
 	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/apps", "-X", "POST", "-d", fmt.Sprintf("{\"name\":\"%s\",\"space_guid\":\"%s\"}", args[1], mySpace.Guid))
 	FreakOut(err)
-	app := V3AppsModel{}
+	app := V3AppModel{}
 	err = json.Unmarshal([]byte(output[0]), &app)
 	FreakOut(err)
 	if app.Error_Code != "" {
