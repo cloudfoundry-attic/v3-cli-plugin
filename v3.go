@@ -12,13 +12,9 @@ func main() {
 	plugin.Start(new(V3Plugin))
 }
 
-func (pluginDemo *V3Plugin) Run(cliConnection plugin.CliConnection, args []string) {
+func (v3plugin *V3Plugin) Run(cliConnection plugin.CliConnection, args []string) {
 	if args[0] == "v3-push" {
-		if len(args) == 2 || len(args) == 3 {
-			commands.Push(cliConnection, args)
-		} else {
-			//print push help
-		}
+		commands.Push(cliConnection, args)
 	} else if args[0] == "v3-apps" {
 		if len(args) == 1 {
 			commands.Apps(cliConnection, args)
@@ -34,7 +30,7 @@ func (pluginDemo *V3Plugin) Run(cliConnection plugin.CliConnection, args []strin
 	}
 }
 
-func (pluginDemo *V3Plugin) GetMetadata() plugin.PluginMetadata {
+func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 	return plugin.PluginMetadata{
 		Name: "v3_beta",
 		Version: plugin.VersionType{
@@ -46,10 +42,12 @@ func (pluginDemo *V3Plugin) GetMetadata() plugin.PluginMetadata {
 			{
 				Name:     "v3-push",
 				Alias:    "",
-				HelpText: "pushes a zipped app as a v3 process",
+				HelpText: "pushes current dir as a v3 process",
 				UsageDetails: plugin.Usage{
-					Usage:   "v3-push APPNAME PATH/TO/ZIPPED/APP",
-					Options: map[string]string{},
+					Usage: "v3-push APPNAME",
+					Options: map[string]string{
+						"p": "path to dir or zip to push",
+					},
 				},
 			},
 			{

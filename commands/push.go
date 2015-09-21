@@ -14,16 +14,21 @@ import (
 	"github.com/cloudfoundry/cli/plugin"
 	. "github.com/jberkhahn/v3_beta/models"
 	. "github.com/jberkhahn/v3_beta/util"
+	"github.com/simonleung8/flags"
 )
 
 func Push(cliConnection plugin.CliConnection, args []string) {
 	appDir := "."
-	if len(args) > 1 {
-		appDir = args[1]
+	fc := flags.New()
+	fc.NewStringFlag("filepath", "p", "path to app dir or zip to upload")
+	fc.Parse(args...)
+	fmt.Println(fc.Args())
+	if fc.IsSet("p") {
+		appDir = fc.String("p")
 	}
 	mySpace, _ := cliConnection.GetCurrentSpace()
 	//create the app
-	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/apps", "-X", "POST", "-d", fmt.Sprintf("{\"name\":\"%s\", \"relationships\": { \"space\": {\"guid\":\"%s\"}}}", args[1], mySpace.Guid))
+	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/apps", "-X", "POST", "-d", fmt.Sprintf("{\"name\":\"%s\", \"relationships\": { \"space\": {\"guid\":\"%s\"}}}", fc.Args()[1], mySpace.Guid))
 	FreakOut(err)
 	app := V3AppModel{}
 	err = json.Unmarshal([]byte(output[0]), &app)
@@ -33,7 +38,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	}
 
 	//create the empty package to upload the app bits to
-	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/packages", app.Guid), "-X", "POST", "-d", "{\"type\":\"bits\"}")
+	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/packages", app.Guid), "-X", "POST", "-d", "{\"type\": \"bits\"}")
 	FreakOut(err)
 	token, err := cliConnection.AccessToken()
 	FreakOut(err)
@@ -54,9 +59,9 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	zipper := app_files.ApplicationZipper{}
 	fileutils.TempFile("uploads", func(zipFile *os.File, err error) {
 		zipper.Zip(appDir, zipFile)
+		_, upload := exec.Command("curl", fmt.Sprintf("%s/v3/packages/%s/upload", apiString, pack.Guid), "-F", fmt.Sprintf("bits=@%s", zipFile.Name()), "-H", fmt.Sprintf("Authorization: %s", token)).Output()
+		FreakOut(upload)
 	})
-	_, upload := exec.Command("curl", fmt.Sprintf("%s/v3/packages/%s/upload", apiString, pack.Guid), "-F", fmt.Sprintf("bits=@%s", args[2]), "-H", fmt.Sprintf("Authorization: %s", token)).Output()
-	FreakOut(upload)
 	//waiting for cc to pour bits into blobstore
 	Poll(cliConnection, fmt.Sprintf("/v3/packages/%s", pack.Guid), "READY", 1*time.Minute, "Package failed to upload")
 
@@ -93,7 +98,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 		}
 	}
 	domainGuid := allDomains.Resources[0].Metadata.Guid
-	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", "v2/routes", "-X", "POST", "-d", fmt.Sprintf(`{"host":"%s","domain_guid":"%s","space_guid":"%s"}`, args[1], domainGuid, space.Guid))
+	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", "v2/routes", "-X", "POST", "-d", fmt.Sprintf(`{"host":"%s","domain_guid":"%s","space_guid":"%s"}`, fc.Args()[1], domainGuid, space.Guid))
 	FreakOut(err)
 	route := RouteModel{}
 	err = json.Unmarshal([]byte(output[0]), &route)
