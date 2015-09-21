@@ -16,7 +16,7 @@ func Apps(cliConnection plugin.CliConnection, args []string) {
 	//output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("v3/apps&space_guid=%s", mySpace.Guid), "-X", "GET")
 
 	//currently global - get all v3 apps regardless of space
-	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "v3/apps", "-X", "GET")
+	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "v3/apps?per_page=1000", "-X", "GET")
 	FreakOut(err)
 	apps := V3AppsModel{}
 	err = json.Unmarshal([]byte(output[0]), &apps)

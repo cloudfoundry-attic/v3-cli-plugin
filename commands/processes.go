@@ -11,7 +11,7 @@ import (
 )
 
 func Processes(cliConnection plugin.CliConnection, args []string) {
-	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "v3/processes", "-X", "GET")
+	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "v3/processes?per_page=1000", "-X", "GET")
 	FreakOut(err)
 	processes := V3ProcessesModel{}
 	err = json.Unmarshal([]byte(output[0]), &processes)

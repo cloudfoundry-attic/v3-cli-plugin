@@ -23,7 +23,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	}
 	mySpace, _ := cliConnection.GetCurrentSpace()
 	//create the app
-	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/apps", "-X", "POST", "-d", fmt.Sprintf("{\"name\":\"%s\",\"space_guid\":\"%s\"}", args[1], mySpace.Guid))
+	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/apps", "-X", "POST", "-d", fmt.Sprintf("{\"name\":\"%s\", \"relationships\": { \"space\": {\"guid\":\"%s\"}}}", args[1], mySpace.Guid))
 	FreakOut(err)
 	app := V3AppModel{}
 	err = json.Unmarshal([]byte(output[0]), &app)
