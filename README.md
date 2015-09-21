@@ -10,8 +10,8 @@ Pushes, maps a route, and starts the zipped app as a V3 app and associated V3 pr
 
 ####v3-apps
 #####Syntax: cf v3-apps
-Shows all v3 apps running in all orgs and spaces.
+Shows v3 apps running in the currently targeted space.
 
 ####v3-processes
 #####Syntax: cf v3-processes
-Shows all v3 processes running in all orgs and spaces.
+Shows all v3 processes and v2 apps running in the currently targeted space.

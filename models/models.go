@@ -9,10 +9,10 @@ type V3AppModel struct {
 }
 
 type V3ProcessModel struct {
-	App    string
 	Type   string
-	Memory int `json:"memory_in_mb"`
-	Disk   int `json:"disk_in_mb"`
+	Memory int        `json:"memory_in_mb"`
+	Disk   int        `json:"disk_in_mb"`
+	Links  LinksModel `json:"_links"`
 }
 
 type V3AppsModel struct {
@@ -21,6 +21,15 @@ type V3AppsModel struct {
 
 type V3ProcessesModel struct {
 	Processes []V3ProcessModel `json:"resources"`
+}
+
+type LinkModel struct {
+	Href string
+}
+
+type LinksModel struct {
+	App   LinkModel
+	Space LinkModel
 }
 
 type V3PackageModel struct {
