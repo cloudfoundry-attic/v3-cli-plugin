@@ -7,3 +7,11 @@ This is a Cloud Foundry CLI plugin for v3 of the CF Cloud Controller API. Both i
 ####v3-push
 #####Syntax: cf v3-push APPNAME /path/to/app.zip
 Pushes, maps a route, and starts the zipped app as a V3 app and associated V3 processes. Currently tries to push to the default domain of your currently targeted Cloud Foundry.
+
+####v3-apps
+#####Syntax: cf v3-apps
+Shows all v3 apps running in all orgs and spaces.
+
+####v3-processes
+#####Syntax: cf v3-processes
+Shows all v3 processes running in all orgs and spaces.
