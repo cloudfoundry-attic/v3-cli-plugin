@@ -22,7 +22,6 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	fc := flags.New()
 	fc.NewStringFlag("filepath", "p", "path to app dir or zip to upload")
 	fc.Parse(args...)
-	fmt.Println(fc.Args())
 	if fc.IsSet("p") {
 		appDir = fc.String("p")
 	}
