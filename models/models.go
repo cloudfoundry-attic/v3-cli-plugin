@@ -9,10 +9,11 @@ type V3AppModel struct {
 }
 
 type V3ProcessModel struct {
-	Type   string
-	Memory int        `json:"memory_in_mb"`
-	Disk   int        `json:"disk_in_mb"`
-	Links  LinksModel `json:"_links"`
+	Type      string
+	Instances int
+	Memory    int        `json:"memory_in_mb"`
+	Disk      int        `json:"disk_in_mb"`
+	Links     LinksModel `json:"_links"`
 }
 
 type V3AppsModel struct {

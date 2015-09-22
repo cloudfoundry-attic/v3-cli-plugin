@@ -22,7 +22,7 @@ func Processes(cliConnection plugin.CliConnection, args []string) {
 	FreakOut(err)
 
 	if len(processes.Processes) > 0 {
-		processesTable := NewTable([]string{("app"), ("type"), ("memory in MB"), ("disk in MB")})
+		processesTable := NewTable([]string{("app"), ("type"), ("instances"), ("memory in MB"), ("disk in MB")})
 		for _, v := range processes.Processes {
 			if strings.Contains(v.Links.Space.Href, mySpace.Guid) {
 				appName := "N/A"
@@ -32,6 +32,7 @@ func Processes(cliConnection plugin.CliConnection, args []string) {
 				processesTable.Add(
 					appName,
 					v.Type,
+					strconv.Itoa(v.Instances),
 					strconv.Itoa(v.Memory)+"MB",
 					strconv.Itoa(v.Disk)+"MB",
 				)
