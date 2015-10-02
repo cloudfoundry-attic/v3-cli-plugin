@@ -1,6 +1,7 @@
 package util
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -20,6 +21,7 @@ func Poll(cliConnection plugin.CliConnection, endpoint string, desired string, t
 		timeElapsed = timeElapsed + 1*time.Second
 		time.Sleep(1 * time.Second)
 	}
+	FreakOut(errors.New(timeoutMessage))
 }
 func FreakOut(err error) {
 	if err != nil {
