@@ -13,7 +13,7 @@ type V3ProcessModel struct {
 	Instances int
 	Memory    int        `json:"memory_in_mb"`
 	Disk      int        `json:"disk_in_mb"`
-	Links     LinksModel `json:"_links"`
+	Links     LinksModel `json:"links"`
 }
 
 type V3AppsModel struct {
