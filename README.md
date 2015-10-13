@@ -15,3 +15,11 @@ Shows v3 apps running in the currently targeted space.
 ####v3-processes
 #####Syntax: cf v3-processes
 Shows all v3 processes and v2 apps running in the currently targeted space.
+
+#Contributing
+Members of the CF CAPI team should have access. If you do end up making changes, please follow these steps:
+
+1. Make your changes
+2. Bump the version number in v3.go
+3. Compile a new binary via `go build v3.go`, move the binary to bin/OSX_binary
+4. Commit your changes
