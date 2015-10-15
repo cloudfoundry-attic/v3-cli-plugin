@@ -15,6 +15,7 @@ import (
 var _ = Describe("Delete", func() {
 	var (
 		fakeCliConnection *fakes.FakeCliConnection
+		args              = []string{"v3-delete", "my-app"}
 
 		searchResult = `{
 				"resources": [
@@ -44,7 +45,7 @@ var _ = Describe("Delete", func() {
 	})
 
 	It("deletes the app", func() {
-		output := io_helpers.CaptureOutput(func() { Delete(fakeCliConnection, []string{"my-app"}) })
+		output := io_helpers.CaptureOutput(func() { Delete(fakeCliConnection, args) })
 		Expect(fakeCliConnection.CliCommandWithoutTerminalOutputArgsForCall(1)).
 			To(Equal([]string{"curl", "/v3/apps/feed-dead-beef", "-X", "DELETE"}))
 
@@ -58,7 +59,7 @@ var _ = Describe("Delete", func() {
 		})
 
 		It("says that the delete failed", func() {
-			output := io_helpers.CaptureOutput(func() { Delete(fakeCliConnection, []string{"my-app"}) })
+			output := io_helpers.CaptureOutput(func() { Delete(fakeCliConnection, args) })
 			Expect(fakeCliConnection.CliCommandWithoutTerminalOutputArgsForCall(1)).
 				To(Equal([]string{"curl", "/v3/apps/feed-dead-beef", "-X", "DELETE"}))
 
@@ -76,7 +77,7 @@ var _ = Describe("Delete", func() {
 		})
 
 		It("tells you the app wasn't found", func() {
-			output := io_helpers.CaptureOutput(func() { Delete(fakeCliConnection, []string{"my-app"}) })
+			output := io_helpers.CaptureOutput(func() { Delete(fakeCliConnection, args) })
 			Expect(fakeCliConnection.CliCommandWithoutTerminalOutputCallCount()).
 				To(Equal(1))
 

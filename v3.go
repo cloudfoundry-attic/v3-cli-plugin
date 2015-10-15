@@ -28,7 +28,7 @@ func (v3plugin *V3Plugin) Run(cliConnection plugin.CliConnection, args []string)
 			//print processes help
 		}
 	} else if args[0] == "v3-delete" {
-		if len(args) == 1 {
+		if len(args) == 2 {
 			commands.Delete(cliConnection, args)
 		} else {
 			//print processes help
