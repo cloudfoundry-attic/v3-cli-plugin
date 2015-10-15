@@ -27,6 +27,12 @@ func (v3plugin *V3Plugin) Run(cliConnection plugin.CliConnection, args []string)
 		} else {
 			//print processes help
 		}
+	} else if args[0] == "v3-delete" {
+		if len(args) == 1 {
+			commands.Delete(cliConnection, args)
+		} else {
+			//print processes help
+		}
 	}
 }
 
@@ -36,7 +42,7 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 		Version: plugin.VersionType{
 			Major: 0,
 			Minor: 4,
-			Build: 3,
+			Build: 4,
 		},
 		Commands: []plugin.Command{
 			{
@@ -65,6 +71,15 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 				HelpText: "displays all v3 processes",
 				UsageDetails: plugin.Usage{
 					Usage:   "v3-processes",
+					Options: map[string]string{},
+				},
+			},
+			{
+				Name:     "v3-delete",
+				Alias:    "v3-d",
+				HelpText: "delete a v3 app",
+				UsageDetails: plugin.Usage{
+					Usage:   "v3-delete APPNAME",
 					Options: map[string]string{},
 				},
 			},

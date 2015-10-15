@@ -8,6 +8,10 @@ This is a Cloud Foundry CLI plugin for v3 of the CF Cloud Controller API. Both i
 #####Syntax: cf v3-push APPNAME /path/to/app.zip
 Pushes, maps a route, and starts the zipped app as a V3 app and associated V3 processes. Currently tries to push to the default domain of your currently targeted Cloud Foundry.
 
+####v3-delete
+#####Syntax: cf v3-delete APPNAME
+Deletes the specified V3 app
+
 ####v3-apps
 #####Syntax: cf v3-apps
 Shows v3 apps running in the currently targeted space.
@@ -23,3 +27,8 @@ Members of the CF CAPI team should have access. If you do end up making changes,
 2. Bump the version number in v3.go
 3. Compile a new binary via `go build v3.go`, move the binary to bin/OSX_binary
 4. Commit your changes
+
+##Running tests
+
+1. Install [Ginkgo](https://github.com/onsi/ginkgo)
+1. Run `ginkgo -r` in the root directory
