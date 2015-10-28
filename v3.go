@@ -42,12 +42,12 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 		Version: plugin.VersionType{
 			Major: 0,
 			Minor: 4,
-			Build: 5,
+			Build: 6,
 		},
 		Commands: []plugin.Command{
 			{
 				Name:     "v3-push",
-				Alias:    "",
+				Alias:    "v3-p",
 				HelpText: "pushes current dir as a v3 process",
 				UsageDetails: plugin.Usage{
 					Usage: "v3-push APPNAME",
@@ -67,7 +67,7 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 			},
 			{
 				Name:     "v3-processes",
-				Alias:    "v3-p",
+				Alias:    "",
 				HelpText: "displays all v3 processes",
 				UsageDetails: plugin.Usage{
 					Usage:   "v3-processes",
