@@ -65,3 +65,6 @@ type RouteModel struct {
 	Metadata MetadataModel    `json:"metadata"`
 	Entity   RouteEntityModel `json:"entity"`
 }
+type RoutesModel struct {
+	Routes []RouteModel `json:"resources"`
+}

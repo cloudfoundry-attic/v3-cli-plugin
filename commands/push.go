@@ -98,6 +98,22 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	}
 	domainGuid := allDomains.Resources[0].Metadata.Guid
 	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", "v2/routes", "-X", "POST", "-d", fmt.Sprintf(`{"host":"%s","domain_guid":"%s","space_guid":"%s"}`, fc.Args()[1], domainGuid, space.Guid))
+
+	var routeGuid string
+	if strings.Contains(output[0], "CF-RouteHostTaken") {
+		output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("v2/routes?q=host:%s;domain_guid:%s", fc.Args()[1], domainGuid))
+		routes := RoutesModel{}
+		err = json.Unmarshal([]byte(output[0]), &routes)
+		routeGuid = routes.Routes[0].Metadata.Guid
+	} else {
+		route := RouteModel{}
+		err = json.Unmarshal([]byte(output[0]), &route)
+		if err != nil {
+			FreakOut(errors.New("error unmarshaling the route: " + err.Error()))
+		}
+		routeGuid = route.Metadata.Guid
+	}
+
 	FreakOut(err)
 	route := RouteModel{}
 	err = json.Unmarshal([]byte(output[0]), &route)
@@ -106,7 +122,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	}
 
 	//map the route to the app
-	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/routes", app.Guid), "-X", "PUT", "-d", fmt.Sprintf("{\"route_guid\": \"%s\"}", route.Metadata.Guid))
+	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/routes", app.Guid), "-X", "PUT", "-d", fmt.Sprintf("{\"route_guid\": \"%s\"}", routeGuid))
 	FreakOut(err)
 
 	//start the app
