@@ -19,15 +19,21 @@ import (
 
 func Push(cliConnection plugin.CliConnection, args []string) {
 	appDir := "."
+	buildpack := "null"
 	fc := flags.New()
 	fc.NewStringFlag("filepath", "p", "path to app dir or zip to upload")
+	fc.NewStringFlag("buildpack", "b", "the buildpack to use")
 	fc.Parse(args...)
 	if fc.IsSet("p") {
 		appDir = fc.String("p")
 	}
+	if fc.IsSet("b"){
+		buildpack = fmt.Sprintf(`"%s"`, fc.String("b"))
+	}
 	mySpace, _ := cliConnection.GetCurrentSpace()
 	//create the app
-	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/apps", "-X", "POST", "-d", fmt.Sprintf("{\"name\":\"%s\", \"relationships\": { \"space\": {\"guid\":\"%s\"}}}", fc.Args()[1], mySpace.Guid))
+	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/apps", "-X", "POST", "-d",
+		fmt.Sprintf(`{"name":"%s", "relationships": { "space": {"guid":"%s"}}, "lifecycle": { "type": "buildpack", "data": { "buildpack": %s } }}`, fc.Args()[1], mySpace.Guid, buildpack))
 	FreakOut(err)
 	app := V3AppModel{}
 	err = json.Unmarshal([]byte(output[0]), &app)
