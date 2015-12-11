@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/cloudfoundry/cli/cf/app_files"
-	"github.com/cloudfoundry/cli/fileutils"
+	"github.com/cloudfoundry/gofileutils/fileutils"
 	"github.com/cloudfoundry/cli/plugin"
 	. "github.com/jberkhahn/v3_beta/models"
 	. "github.com/jberkhahn/v3_beta/util"
@@ -20,9 +20,12 @@ import (
 func Push(cliConnection plugin.CliConnection, args []string) {
 	appDir := "."
 	buildpack := "null"
+	dockerImage := ""
+
 	fc := flags.New()
 	fc.NewStringFlag("filepath", "p", "path to app dir or zip to upload")
 	fc.NewStringFlag("buildpack", "b", "the buildpack to use")
+	fc.NewStringFlag("docker-image", "di", "the docker image to use")
 	fc.Parse(args...)
 	if fc.IsSet("p") {
 		appDir = fc.String("p")
@@ -30,10 +33,22 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	if fc.IsSet("b"){
 		buildpack = fmt.Sprintf(`"%s"`, fc.String("b"))
 	}
+	if fc.IsSet("di"){
+		dockerImage = fmt.Sprintf(`"%s"`, fc.String("di"))
+	}
+
 	mySpace, _ := cliConnection.GetCurrentSpace()
+
+	lifecycle := ""
+	if (dockerImage != "") {
+		lifecycle = `"lifecycle": { "type": "docker", "data": {} }`
+	} else {
+		lifecycle = fmt.Sprintf(`"lifecycle": { "type": "buildpack", "data": { "buildpack": %s } }`, buildpack)
+	}
+
 	//create the app
 	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/apps", "-X", "POST", "-d",
-		fmt.Sprintf(`{"name":"%s", "relationships": { "space": {"guid":"%s"}}, "lifecycle": { "type": "buildpack", "data": { "buildpack": %s } }}`, fc.Args()[1], mySpace.Guid, buildpack))
+		fmt.Sprintf(`{"name":"%s", "relationships": { "space": {"guid":"%s"}}, %s}`, fc.Args()[1], mySpace.Guid, lifecycle))
 	FreakOut(err)
 	app := V3AppModel{}
 	err = json.Unmarshal([]byte(output[0]), &app)
@@ -42,33 +57,47 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 		FreakOut(errors.New("Error creating v3 app: " + app.Error_Code))
 	}
 
-	//create the empty package to upload the app bits to
-	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/packages", app.Guid), "-X", "POST", "-d", "{\"type\": \"bits\"}")
-	FreakOut(err)
-	token, err := cliConnection.AccessToken()
-	FreakOut(err)
-	api, apiErr := cliConnection.ApiEndpoint()
-	FreakOut(apiErr)
+	//create package
 	pack := V3PackageModel{}
-	err = json.Unmarshal([]byte(output[0]), &pack)
-	if err != nil {
-		FreakOut(errors.New("Error creating v3 app package: " + app.Error_Code))
-	}
+	if (dockerImage != "") {
+		request := fmt.Sprintf(`{"type": "docker", "data": {"image": %s}}`, dockerImage)
+		output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/packages", app.Guid), "-X", "POST", "-d", request)
+		FreakOut(err)
 
-	apiString := fmt.Sprintf("%s", api)
-	if strings.Index(apiString, "s") == 4 {
-		apiString = apiString[:4] + apiString[5:]
-	}
+		err = json.Unmarshal([]byte(output[0]), &pack)
+		if err != nil {
+			FreakOut(errors.New("Error creating v3 app package: " + app.Error_Code))
+		}
+	} else {
+		//create the empty package to upload the app bits to
+		output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/packages", app.Guid), "-X", "POST", "-d", "{\"type\": \"bits\"}")
+		FreakOut(err)
 
-	//gather files
-	zipper := app_files.ApplicationZipper{}
-	fileutils.TempFile("uploads", func(zipFile *os.File, err error) {
-		zipper.Zip(appDir, zipFile)
-		_, upload := exec.Command("curl", fmt.Sprintf("%s/v3/packages/%s/upload", apiString, pack.Guid), "-F", fmt.Sprintf("bits=@%s", zipFile.Name()), "-H", fmt.Sprintf("Authorization: %s", token)).Output()
-		FreakOut(upload)
-	})
-	//waiting for cc to pour bits into blobstore
-	Poll(cliConnection, fmt.Sprintf("/v3/packages/%s", pack.Guid), "READY", 1*time.Minute, "Package failed to upload")
+		err = json.Unmarshal([]byte(output[0]), &pack)
+		if err != nil {
+			FreakOut(errors.New("Error creating v3 app package: " + app.Error_Code))
+		}
+
+		token, err := cliConnection.AccessToken()
+		FreakOut(err)
+		api, apiErr := cliConnection.ApiEndpoint()
+		FreakOut(apiErr)
+		apiString := fmt.Sprintf("%s", api)
+		if strings.Index(apiString, "s") == 4 {
+			apiString = apiString[:4] + apiString[5:]
+		}
+
+		//gather files
+		zipper := app_files.ApplicationZipper{}
+		fileutils.TempFile("uploads", func(zipFile *os.File, err error) {
+			zipper.Zip(appDir, zipFile)
+			_, upload := exec.Command("curl", fmt.Sprintf("%s/v3/packages/%s/upload", apiString, pack.Guid), "-F", fmt.Sprintf("bits=@%s", zipFile.Name()), "-H", fmt.Sprintf("Authorization: %s", token)).Output()
+			FreakOut(upload)
+		})
+
+		//waiting for cc to pour bits into blobstore
+		Poll(cliConnection, fmt.Sprintf("/v3/packages/%s", pack.Guid), "READY", 1 * time.Minute, "Package failed to upload")
+	}
 
 	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/packages/%s/droplets", pack.Guid), "-X", "POST", "-d", "{}")
 	FreakOut(err)
