@@ -31,7 +31,13 @@ func (v3plugin *V3Plugin) Run(cliConnection plugin.CliConnection, args []string)
 		if len(args) == 2 {
 			commands.Delete(cliConnection, args)
 		} else {
-			//print processes help
+			//print help
+		}
+	} else if args[0] == "v3-logs" {
+		if len(args) == 2 {
+			commands.Logs(cliConnection, args)
+		} else {
+			//			print help
 		}
 	}
 }
@@ -42,7 +48,7 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 		Version: plugin.VersionType{
 			Major: 0,
 			Minor: 4,
-			Build: 8,
+			Build: 9,
 		},
 		Commands: []plugin.Command{
 			{
@@ -81,6 +87,15 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 				HelpText: "delete a v3 app",
 				UsageDetails: plugin.Usage{
 					Usage:   "v3-delete APPNAME",
+					Options: map[string]string{},
+				},
+			},
+			{
+				Name:     "v3-logs",
+				Alias:    "",
+				HelpText: "tail logs for a v3 app",
+				UsageDetails: plugin.Usage{
+					Usage:   "v3-logs APPNAME",
 					Options: map[string]string{},
 				},
 			},
