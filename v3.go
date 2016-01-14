@@ -39,6 +39,12 @@ func (v3plugin *V3Plugin) Run(cliConnection plugin.CliConnection, args []string)
 		} else {
 			//			print help
 		}
+	} else if args[0] == "v3-bind-service" {
+		if len(args) >= 3 {
+			commands.BindService(cliConnection, args)
+		} else {
+			//			print help
+		}
 	}
 }
 
@@ -48,7 +54,7 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 		Version: plugin.VersionType{
 			Major: 0,
 			Minor: 4,
-			Build: 9,
+			Build: 10,
 		},
 		Commands: []plugin.Command{
 			{
@@ -97,6 +103,17 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 				UsageDetails: plugin.Usage{
 					Usage:   "v3-logs APPNAME",
 					Options: map[string]string{},
+				},
+			},
+			{
+				Name:     "v3-bind-service",
+				Alias:    "v3-bs",
+				HelpText: "bind a service instance to a v3 app",
+				UsageDetails: plugin.Usage{
+					Usage: "v3-bind-service APPNAME SERVICEINSTANCE",
+					Options: map[string]string{
+						"c": "parameters as json",
+					},
 				},
 			},
 		},
