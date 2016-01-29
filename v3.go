@@ -39,6 +39,12 @@ func (v3plugin *V3Plugin) Run(cliConnection plugin.CliConnection, args []string)
 		} else {
 			//			print help
 		}
+	} else if args[0] == "v3-tasks" {
+		if len(args) == 2 {
+			commands.Tasks(cliConnection, args)
+		} else {
+			//			print help
+		}
 	} else if args[0] == "v3-bind-service" {
 		if len(args) >= 3 {
 			commands.BindService(cliConnection, args)
@@ -54,7 +60,7 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 		Version: plugin.VersionType{
 			Major: 0,
 			Minor: 4,
-			Build: 10,
+			Build: 11,
 		},
 		Commands: []plugin.Command{
 			{
@@ -102,6 +108,15 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 				HelpText: "tail logs for a v3 app",
 				UsageDetails: plugin.Usage{
 					Usage:   "v3-logs APPNAME",
+					Options: map[string]string{},
+				},
+			},
+			{
+				Name:     "v3-tasks",
+				Alias:    "v3-t",
+				HelpText: "list tasks for a v3 app",
+				UsageDetails: plugin.Usage{
+					Usage:   "v3-tasks APPNAME",
 					Options: map[string]string{},
 				},
 			},

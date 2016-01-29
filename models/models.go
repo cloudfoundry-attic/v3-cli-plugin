@@ -16,12 +16,23 @@ type V3ProcessModel struct {
 	Links     LinksModel `json:"links"`
 }
 
+type V3TaskModel struct {
+	Name    string
+	Guid    string
+	Command string
+	State   string
+}
+
 type V3AppsModel struct {
 	Apps []V3AppModel `json:"resources"`
 }
 
 type V3ProcessesModel struct {
 	Processes []V3ProcessModel `json:"resources"`
+}
+
+type V3TasksModel struct {
+	Tasks []V3TaskModel `json:"resources"`
 }
 
 type LinkModel struct {

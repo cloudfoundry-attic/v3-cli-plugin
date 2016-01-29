@@ -27,6 +27,10 @@ Shows all v3 processes and v2 apps running in the currently targeted space.
 #####Syntax: cf v3-logs APPNAME
 Tails logs for all processes of the specified V3 app.
 
+####v3-tasks
+#####Syntax: cf v3-tasks APPNAME
+Shows tasks for the specified V3 app.
+
 ####v3-bind-service
 #####Syntax: cf v3-bind-service APPNAME SERVICEINSTANCE [-c PARAMETERS_AS_JSON]
 Binds a service instance to a v3 app.
