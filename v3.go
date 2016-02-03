@@ -45,6 +45,12 @@ func (v3plugin *V3Plugin) Run(cliConnection plugin.CliConnection, args []string)
 		} else {
 			//			print help
 		}
+	} else if args[0] == "v3-run-task" {
+		if len(args) == 4 {
+			commands.RunTask(cliConnection, args)
+		} else {
+			//			print help
+		}
 	} else if args[0] == "v3-bind-service" {
 		if len(args) >= 3 {
 			commands.BindService(cliConnection, args)
@@ -60,7 +66,7 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 		Version: plugin.VersionType{
 			Major: 0,
 			Minor: 4,
-			Build: 11,
+			Build: 12,
 		},
 		Commands: []plugin.Command{
 			{
@@ -129,6 +135,15 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 					Options: map[string]string{
 						"c": "parameters as json",
 					},
+				},
+			},
+			{
+				Name:     "v3-run-task",
+				Alias:    "v3-rt",
+				HelpText: "run a task on a v3 app",
+				UsageDetails: plugin.Usage{
+					Usage:   "v3-run-task APPNAME TASKNAME COMMAND",
+					Options: map[string]string{},
 				},
 			},
 		},
