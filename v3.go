@@ -51,6 +51,12 @@ func (v3plugin *V3Plugin) Run(cliConnection plugin.CliConnection, args []string)
 		} else {
 			//			print help
 		}
+	} else if args[0] == "v3-cancel-task" {
+		if len(args) == 3 {
+			commands.CancelTask(cliConnection, args)
+		} else {
+			fmt.Printf("Wrong number of argument, type `cf %s -h` for help\n", args[0])
+		}
 	} else if args[0] == "v3-bind-service" {
 		if len(args) >= 3 {
 			commands.BindService(cliConnection, args)
@@ -146,6 +152,15 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 					Options: map[string]string{},
 				},
 			},
+			{
+				Name:     "v3-cancel-task",
+				Alias:    "v3-ct",
+				HelpText: "cancel a task on a v3 app",
+				UsageDetails: plugin.Usage{
+					Usage: "v3-cancel-task APPNAME TASKNAME",
+				},
+			},
 		},
 	}
+
 }
