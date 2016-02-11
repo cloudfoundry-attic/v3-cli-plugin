@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/cloudfoundry/cli/plugin"
 	"github.com/jberkhahn/v3_beta/commands"
 )
@@ -19,37 +21,37 @@ func (v3plugin *V3Plugin) Run(cliConnection plugin.CliConnection, args []string)
 		if len(args) == 1 {
 			commands.Apps(cliConnection, args)
 		} else {
-			//print apps help
+			fmt.Printf("Wrong number of argument, type `cf %s -h` for help\n", args[0])
 		}
 	} else if args[0] == "v3-processes" {
 		if len(args) == 1 {
 			commands.Processes(cliConnection, args)
 		} else {
-			//print processes help
+			fmt.Printf("Wrong number of argument, type `cf %s -h` for help\n", args[0])
 		}
 	} else if args[0] == "v3-delete" {
 		if len(args) == 2 {
 			commands.Delete(cliConnection, args)
 		} else {
-			//print help
+			fmt.Printf("Wrong number of argument, type `cf %s -h` for help\n", args[0])
 		}
 	} else if args[0] == "v3-logs" {
 		if len(args) == 2 {
 			commands.Logs(cliConnection, args)
 		} else {
-			//			print help
+			fmt.Printf("Wrong number of argument, type `cf %s -h` for help\n", args[0])
 		}
 	} else if args[0] == "v3-tasks" {
 		if len(args) == 2 {
 			commands.Tasks(cliConnection, args)
 		} else {
-			//			print help
+			fmt.Printf("Wrong number of argument, type `cf %s -h` for help\n", args[0])
 		}
 	} else if args[0] == "v3-run-task" {
 		if len(args) == 4 {
 			commands.RunTask(cliConnection, args)
 		} else {
-			//			print help
+			fmt.Printf("Wrong number of argument, type `cf %s -h` for help\n", args[0])
 		}
 	} else if args[0] == "v3-cancel-task" {
 		if len(args) == 3 {
@@ -61,7 +63,7 @@ func (v3plugin *V3Plugin) Run(cliConnection plugin.CliConnection, args []string)
 		if len(args) >= 3 {
 			commands.BindService(cliConnection, args)
 		} else {
-			//			print help
+			fmt.Printf("Wrong number of argument, type `cf %s -h` for help\n", args[0])
 		}
 	}
 }
