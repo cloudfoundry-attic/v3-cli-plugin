@@ -10,10 +10,10 @@ import (
 	"time"
 
 	"github.com/cloudfoundry/cli/cf/app_files"
-	"github.com/cloudfoundry/gofileutils/fileutils"
 	"github.com/cloudfoundry/cli/plugin"
-	. "github.com/jberkhahn/v3_beta/models"
-	. "github.com/jberkhahn/v3_beta/util"
+	"github.com/cloudfoundry/gofileutils/fileutils"
+	. "github.com/cloudfoundry/v3-cli-plugin/models"
+	. "github.com/cloudfoundry/v3-cli-plugin/util"
 	"github.com/simonleung8/flags"
 )
 
@@ -30,17 +30,17 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	if fc.IsSet("p") {
 		appDir = fc.String("p")
 	}
-	if fc.IsSet("b"){
+	if fc.IsSet("b") {
 		buildpack = fmt.Sprintf(`"%s"`, fc.String("b"))
 	}
-	if fc.IsSet("di"){
+	if fc.IsSet("di") {
 		dockerImage = fmt.Sprintf(`"%s"`, fc.String("di"))
 	}
 
 	mySpace, _ := cliConnection.GetCurrentSpace()
 
 	lifecycle := ""
-	if (dockerImage != "") {
+	if dockerImage != "" {
 		lifecycle = `"lifecycle": { "type": "docker", "data": {} }`
 	} else {
 		lifecycle = fmt.Sprintf(`"lifecycle": { "type": "buildpack", "data": { "buildpack": %s } }`, buildpack)
@@ -59,7 +59,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 
 	//create package
 	pack := V3PackageModel{}
-	if (dockerImage != "") {
+	if dockerImage != "" {
 		request := fmt.Sprintf(`{"type": "docker", "data": {"image": %s}}`, dockerImage)
 		output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/packages", app.Guid), "-X", "POST", "-d", request)
 		FreakOut(err)
@@ -96,7 +96,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 		})
 
 		//waiting for cc to pour bits into blobstore
-		Poll(cliConnection, fmt.Sprintf("/v3/packages/%s", pack.Guid), "READY", 1 * time.Minute, "Package failed to upload")
+		Poll(cliConnection, fmt.Sprintf("/v3/packages/%s", pack.Guid), "READY", 1*time.Minute, "Package failed to upload")
 	}
 
 	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/packages/%s/droplets", pack.Guid), "-X", "POST", "-d", "{}")

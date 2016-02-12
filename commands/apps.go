@@ -6,21 +6,21 @@ import (
 	"strconv"
 
 	"github.com/cloudfoundry/cli/plugin"
-	. "github.com/jberkhahn/v3_beta/models"
-	. "github.com/jberkhahn/v3_beta/util"
+	. "github.com/cloudfoundry/v3-cli-plugin/models"
+	"github.com/cloudfoundry/v3-cli-plugin/util"
 )
 
 func Apps(cliConnection plugin.CliConnection, args []string) {
 	mySpace, err := cliConnection.GetCurrentSpace()
-	FreakOut(err)
+	util.FreakOut(err)
 	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("v3/apps?space_guids=%s", mySpace.Guid), "-X", "GET")
-	FreakOut(err)
+	util.FreakOut(err)
 	apps := V3AppsModel{}
 	err = json.Unmarshal([]byte(output[0]), &apps)
-	FreakOut(err)
+	util.FreakOut(err)
 
 	if len(apps.Apps) > 0 {
-		appsTable := NewTable([]string{("name"), ("total_desired_instances")})
+		appsTable := util.NewTable([]string{("name"), ("total_desired_instances")})
 		for _, v := range apps.Apps {
 			appsTable.Add(
 				v.Name,

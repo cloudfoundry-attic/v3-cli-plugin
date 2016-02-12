@@ -14,8 +14,8 @@ import (
 	"github.com/cloudfoundry/loggregatorlib/logmessage"
 
 	"github.com/cloudfoundry/cli/plugin"
-	. "github.com/jberkhahn/v3_beta/models"
-	. "github.com/jberkhahn/v3_beta/util"
+	. "github.com/cloudfoundry/v3-cli-plugin/models"
+	. "github.com/cloudfoundry/v3-cli-plugin/util"
 )
 
 func Logs(cliConnection plugin.CliConnection, args []string) {

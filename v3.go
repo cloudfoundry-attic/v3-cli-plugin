@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cloudfoundry/cli/plugin"
-	"github.com/jberkhahn/v3_beta/commands"
+	"github.com/cloudfoundry/v3-cli-plugin/commands"
 )
 
 type V3Plugin struct {

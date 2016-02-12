@@ -9,7 +9,7 @@ import (
 
 	fakes "github.com/cloudfoundry/cli/plugin/fakes"
 	io_helpers "github.com/cloudfoundry/cli/testhelpers/io"
-	. "github.com/jberkhahn/v3_beta/commands"
+	. "github.com/cloudfoundry/v3-cli-plugin/commands"
 )
 
 var _ = Describe("Delete", func() {

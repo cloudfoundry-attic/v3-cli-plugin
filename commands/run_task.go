@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/cloudfoundry/cli/plugin"
-	. "github.com/jberkhahn/v3_beta/models"
+	. "github.com/cloudfoundry/v3-cli-plugin/models"
 )
 
 func RunTask(cliConnection plugin.CliConnection, args []string) {
