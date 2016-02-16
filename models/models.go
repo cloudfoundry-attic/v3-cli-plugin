@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type V3AppModel struct {
 	Name       string
 	Guid       string
@@ -17,10 +19,11 @@ type V3ProcessModel struct {
 }
 
 type V3TaskModel struct {
-	Name    string
-	Guid    string
-	Command string
-	State   string
+	Name      string
+	Guid      string
+	Command   string
+	State     string
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type V3AppsModel struct {
