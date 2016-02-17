@@ -39,6 +39,24 @@ Run a task for an app.
 #####Syntax: cf v3-bind-service APPNAME SERVICEINSTANCE [-c PARAMETERS_AS_JSON]
 Binds a service instance to a v3 app.
 
+#Installing
+
+```
+cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/blob/master/bin/OSX_binary?raw=true
+```
+
+If you have already installed the plugin, you must uninstall it before installing an updated version
+
+```
+cf uninstall-plugin v3_beta
+```
+
+If you love copy-pasting and want all the things
+
+```
+cf uninstall-plugin v3_beta; cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/blob/master/bin/OSX_binary?raw=true -f
+```
+
 #Contributing
 Members of the CF CAPI team should have access. If you do end up making changes, please follow these steps:
 
