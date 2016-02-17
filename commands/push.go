@@ -157,7 +157,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	}
 
 	//map the route to the app
-	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/routes", app.Guid), "-X", "PUT", "-d", fmt.Sprintf("{\"route_guid\": \"%s\"}", routeGuid))
+	output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/route_mappings", app.Guid), "-X", "POST", "-d", fmt.Sprintf(`{"relationships": { "route": { "guid": "%s" }	} }`, routeGuid))
 	FreakOut(err)
 
 	//start the app
