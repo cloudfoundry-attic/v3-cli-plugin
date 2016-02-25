@@ -19,10 +19,10 @@ type V3ProcessModel struct {
 }
 
 type V3TaskModel struct {
-	Name      string
-	Guid      string
-	Command   string
-	State     string
+	Name      string    `json:"name"`
+	Guid      string    `json:"guid"`
+	Command   string    `json:"command"`
+	State     string    `json:"state"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
