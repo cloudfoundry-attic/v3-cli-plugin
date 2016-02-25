@@ -35,6 +35,10 @@ Shows tasks for the specified V3 app.
 #####Syntax: cf v3-run-task APPNAME TASKNAME COMMAND
 Run a task for an app.
 
+#### v3-cancel-task
+##### Syntax: cf v3-cancel-task APPNAME TASKNAME
+Cancel a task for an app.
+
 ####v3-bind-service
 #####Syntax: cf v3-bind-service APPNAME SERVICEINSTANCE [-c PARAMETERS_AS_JSON]
 Binds a service instance to a v3 app.
