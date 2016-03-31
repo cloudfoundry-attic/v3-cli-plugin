@@ -20,18 +20,6 @@ import (
 
 func Logs(cliConnection plugin.CliConnection, args []string) {
 	appName := args[1]
-
-	bufferTime := 5 * time.Second
-	messageQueue := api.NewLoggregator_SortedMessageQueue(bufferTime, time.Now)
-
-	onConnect := func() {
-		fmt.Printf("Tailing logs for app %s...\r\n\r\n", appName)
-	}
-
-	onMessage := func(msg *logmessage.LogMessage) {
-		fmt.Printf("%s\r\n", logMessageOutput(msg, time.Local))
-	}
-
 	output, _ := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps?names=%s", appName))
 	apps := V3AppsModel{}
 	json.Unmarshal([]byte(output[0]), &apps)
@@ -42,68 +30,63 @@ func Logs(cliConnection plugin.CliConnection, args []string) {
 	}
 	app := apps.Apps[0]
 
-	ssl, err := cliConnection.IsSSLDisabled()
-	FreakOut(err)
+	messageQueue := api.NewLoggregator_SortedMessageQueue()
+
+	bufferTime := 25 * time.Millisecond
+	ticker := time.NewTicker(bufferTime)
+
+	c := make(chan *logmessage.LogMessage)
+
 	loggregatorEndpoint, err := cliConnection.LoggregatorEndpoint()
 	FreakOut(err)
-	accessToken, err := cliConnection.AccessToken()
-	FreakOut(err)
 
+	ssl, err := cliConnection.IsSSLDisabled()
+	FreakOut(err)
 	tlsConfig := net.NewTLSConfig([]tls.Certificate{}, ssl)
+
 	loggregatorConsumer := consumer.New(loggregatorEndpoint, tlsConfig, http.ProxyFromEnvironment)
 	defer func() {
 		loggregatorConsumer.Close()
-		flushMessageQueue(onMessage, messageQueue)
+		flushMessageQueue(c, messageQueue)
 	}()
 
+	onConnect := func() {
+		fmt.Printf("Tailing logs for app %s...\r\n\r\n", appName)
+	}
 	loggregatorConsumer.SetOnConnectCallback(onConnect)
+
+	accessToken, err := cliConnection.AccessToken()
+	FreakOut(err)
+
 	logChan, err := loggregatorConsumer.Tail(app.Guid, accessToken)
 	if err != nil {
 		FreakOut(err)
 	}
 
-	bufferMessages(logChan, onMessage, messageQueue)
-}
+	go func() {
+		for _ = range ticker.C {
+			flushMessageQueue(c, messageQueue)
+		}
+	}()
 
-func bufferMessages(logChan <-chan *logmessage.LogMessage, onMessage func(*logmessage.LogMessage), messageQueue *api.Loggregator_SortedMessageQueue) {
-
-	for {
-		sendMessages(messageQueue, onMessage)
-
-		select {
-		case msg, ok := <-logChan:
-			if !ok {
-				return
-			}
+	go func() {
+		for msg := range logChan {
 			messageQueue.PushMessage(msg)
-		default:
-			time.Sleep(1 * time.Millisecond)
 		}
+
+		flushMessageQueue(c, messageQueue)
+		close(c)
+	}()
+
+	for msg := range c {
+		fmt.Printf("%s\r\n", logMessageOutput(msg, time.Local))
 	}
 }
 
-func flushMessageQueue(onMessage func(*logmessage.LogMessage), messageQueue *api.Loggregator_SortedMessageQueue) {
-	if onMessage == nil {
-		return
-	}
-
-	for {
-		message := messageQueue.PopMessage()
-		if message == nil {
-			break
-		}
-
-		onMessage(message)
-	}
-
-	onMessage = nil
-}
-
-func sendMessages(queue *api.Loggregator_SortedMessageQueue, onMessage func(*logmessage.LogMessage)) {
-	for queue.NextTimestamp() < time.Now().UnixNano() {
-		msg := queue.PopMessage()
-		onMessage(msg)
-	}
+func flushMessageQueue(c chan *logmessage.LogMessage, messageQueue *api.Loggregator_SortedMessageQueue) {
+	messageQueue.EnumerateAndClear(func(m *logmessage.LogMessage) {
+		c <- m
+	})
 }
 
 func logMessageOutput(msg *logmessage.LogMessage, loc *time.Location) string {
