@@ -2,13 +2,6 @@
 
 This is a Cloud Foundry CLI plugin for v3 of the CF Cloud Controller API. Both it and the V3 api are currently under active development, so stability isn't guaranteed. Please use caution when using this plugin and the V3 api in general.
 
-1. Make your changes
-1. Bump the version number in v3.go
-1. Before compiling the binary, you have to setup the cli repo
-
-1. Compile a new binary via `go build v3.go`, move the binary to bin/OSX_binary
-1. Commit your changes
- 
 #Commands
 
 ####v3-push
