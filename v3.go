@@ -74,7 +74,7 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 		Version: plugin.VersionType{
 			Major: 0,
 			Minor: 4,
-			Build: 17,
+			Build: 18,
 		},
 		Commands: []plugin.Command{
 			{
@@ -85,6 +85,7 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 					Usage: "v3-push APPNAME",
 					Options: map[string]string{
 						"p":  "path to dir or zip to push",
+						"b":  "custom buildpack by name or Git URL",
 						"di": "path to docker image to push",
 					},
 				},
