@@ -11,6 +11,9 @@ Pushes, maps a route, and starts the zipped app as a V3 app and associated V3 pr
 #####Syntax: cf v3-push APPNAME --docker-image "path/to/docker/image"
 Pushes, maps a route, and starts the provided docker image as a V3 app and associated V3 processes. Currently tries to push to the default domain of your currently targeted Cloud Foundry.
 
+#####Other Options:
+`-b` : Custom buildpack by name (e.g. my-buildpack) or Git URL
+
 ####v3-delete
 #####Syntax: cf v3-delete APPNAME
 Deletes the specified V3 app
