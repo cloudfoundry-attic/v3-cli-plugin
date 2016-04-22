@@ -9,7 +9,7 @@ import (
 
 	"github.com/cloudfoundry/cli/cf/api"
 	"github.com/cloudfoundry/cli/cf/net"
-	"github.com/cloudfoundry/cli/cf/ui_helpers"
+	"github.com/cloudfoundry/cli/cf/uihelpers"
 	consumer "github.com/cloudfoundry/loggregator_consumer"
 	"github.com/cloudfoundry/loggregatorlib/logmessage"
 
@@ -90,8 +90,8 @@ func flushMessageQueue(c chan *logmessage.LogMessage, messageQueue *api.Loggrega
 }
 
 func logMessageOutput(msg *logmessage.LogMessage, loc *time.Location) string {
-	logHeader, coloredLogHeader := ui_helpers.ExtractLogHeader(msg, loc)
-	logContent := ui_helpers.ExtractLogContent(msg, logHeader)
+	logHeader, coloredLogHeader := uihelpers.ExtractLogHeader(msg, loc)
+	logContent := uihelpers.ExtractLogContent(msg, logHeader)
 
 	return fmt.Sprintf("%s%s", coloredLogHeader, logContent)
 }

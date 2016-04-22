@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cloudfoundry/cli/cf/app_files"
+	"github.com/cloudfoundry/cli/cf/appfiles"
 	"github.com/cloudfoundry/cli/plugin"
 	"github.com/cloudfoundry/gofileutils/fileutils"
 	. "github.com/cloudfoundry/v3-cli-plugin/models"
@@ -88,7 +88,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 		}
 
 		//gather files
-		zipper := app_files.ApplicationZipper{}
+		zipper := appfiles.ApplicationZipper{}
 		fileutils.TempFile("uploads", func(zipFile *os.File, err error) {
 			zipper.Zip(appDir, zipFile)
 			_, upload := exec.Command("curl", fmt.Sprintf("%s/v3/packages/%s/upload", apiString, pack.Guid), "-F", fmt.Sprintf("bits=@%s", zipFile.Name()), "-H", fmt.Sprintf("Authorization: %s", token)).Output()
