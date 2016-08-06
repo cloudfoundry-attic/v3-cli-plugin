@@ -51,7 +51,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 		fmt.Sprintf(`{"name":"%s", "relationships": { "space": {"guid":"%s"}}, %s}`, fc.Args()[1], mySpace.Guid, lifecycle))
 	FreakOut(err)
 	app := V3AppModel{}
-	err = json.Unmarshal([]byte(output[0]), &app)
+	err = json.Unmarshal([]byte(strings.Join(output, "")), &app)
 	FreakOut(err)
 	if app.Error_Code != "" {
 		FreakOut(errors.New("Error creating v3 app: " + app.Error_Code))
