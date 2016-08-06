@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cloudfoundry/cli/cf/api"
+	api "github.com/cloudfoundry/cli/cf/api/logs"
 	"github.com/cloudfoundry/cli/cf/net"
 	"github.com/cloudfoundry/cli/cf/uihelpers"
 	consumer "github.com/cloudfoundry/loggregator_consumer"
@@ -30,7 +30,7 @@ func Logs(cliConnection plugin.CliConnection, args []string) {
 	}
 	app := apps.Apps[0]
 
-	messageQueue := api.NewLoggregator_SortedMessageQueue()
+	messageQueue := api.NewLoggregatorMessageQueue()
 
 	bufferTime := 25 * time.Millisecond
 	ticker := time.NewTicker(bufferTime)
@@ -83,7 +83,7 @@ func Logs(cliConnection plugin.CliConnection, args []string) {
 	}
 }
 
-func flushMessageQueue(c chan *logmessage.LogMessage, messageQueue *api.Loggregator_SortedMessageQueue) {
+func flushMessageQueue(c chan *logmessage.LogMessage, messageQueue *api.LoggregatorMessageQueue) {
 	messageQueue.EnumerateAndClear(func(m *logmessage.LogMessage) {
 		c <- m
 	})
