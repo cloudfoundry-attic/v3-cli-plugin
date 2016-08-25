@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/cloudfoundry/cli/plugin"
 	. "github.com/cloudfoundry/v3-cli-plugin/models"
@@ -13,10 +14,11 @@ import (
 func Apps(cliConnection plugin.CliConnection, args []string) {
 	mySpace, err := cliConnection.GetCurrentSpace()
 	util.FreakOut(err)
-	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("v3/apps?space_guids=%s", mySpace.Guid), "-X", "GET")
+	rawOutput, err := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("v3/apps?space_guids=%s", mySpace.Guid), "-X", "GET")
+	output := strings.Join(rawOutput, "")
 	util.FreakOut(err)
 	apps := V3AppsModel{}
-	err = json.Unmarshal([]byte(output[0]), &apps)
+	err = json.Unmarshal([]byte(output), &apps)
 	util.FreakOut(err)
 
 	if len(apps.Apps) > 0 {

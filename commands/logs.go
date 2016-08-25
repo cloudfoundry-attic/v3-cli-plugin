@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
-	"github.com/cloudfoundry/cli/cf/api"
+	"github.com/cloudfoundry/cli/cf/api/logs"
 	"github.com/cloudfoundry/cli/cf/net"
 	"github.com/cloudfoundry/cli/cf/uihelpers"
 	consumer "github.com/cloudfoundry/loggregator_consumer"
@@ -20,9 +21,10 @@ import (
 
 func Logs(cliConnection plugin.CliConnection, args []string) {
 	appName := args[1]
-	output, _ := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps?names=%s", appName))
+	rawOutput, _ := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps?names=%s", appName))
 	apps := V3AppsModel{}
-	json.Unmarshal([]byte(output[0]), &apps)
+	output := strings.Join(rawOutput, "")
+	json.Unmarshal([]byte(output), &apps)
 
 	if len(apps.Apps) == 0 {
 		fmt.Printf("App %s not found\n", appName)
@@ -30,7 +32,7 @@ func Logs(cliConnection plugin.CliConnection, args []string) {
 	}
 	app := apps.Apps[0]
 
-	messageQueue := api.NewLoggregator_SortedMessageQueue()
+	messageQueue := logs.NewLoggregatorMessageQueue()
 
 	bufferTime := 25 * time.Millisecond
 	ticker := time.NewTicker(bufferTime)
@@ -83,7 +85,7 @@ func Logs(cliConnection plugin.CliConnection, args []string) {
 	}
 }
 
-func flushMessageQueue(c chan *logmessage.LogMessage, messageQueue *api.Loggregator_SortedMessageQueue) {
+func flushMessageQueue(c chan *logmessage.LogMessage, messageQueue *logs.LoggregatorMessageQueue) {
 	messageQueue.EnumerateAndClear(func(m *logmessage.LogMessage) {
 		c <- m
 	})

@@ -13,9 +13,10 @@ import (
 func Poll(cliConnection plugin.CliConnection, endpoint string, desired string, timeout time.Duration, timeoutMessage string) {
 	timeElapsed := 0 * time.Second
 	for timeElapsed < timeout {
-		output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", endpoint, "-X", "GET")
+		rawOutput, err := cliConnection.CliCommandWithoutTerminalOutput("curl", endpoint, "-X", "GET")
 		FreakOut(err)
-		if strings.Contains(output[0], desired) {
+		output := strings.Join(rawOutput, "")
+		if strings.Contains(output, desired) {
 			return
 		}
 		timeElapsed = timeElapsed + 1*time.Second

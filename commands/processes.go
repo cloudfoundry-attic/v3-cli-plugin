@@ -15,10 +15,11 @@ func Processes(cliConnection plugin.CliConnection, args []string) {
 	mySpace, err := cliConnection.GetCurrentSpace()
 	FreakOut(err)
 
-	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "v3/processes?per_page=5000", "-X", "GET")
+	rawOutput, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "v3/processes?per_page=5000", "-X", "GET")
 	FreakOut(err)
+	output := strings.Join(rawOutput, "")
 	processes := V3ProcessesModel{}
-	err = json.Unmarshal([]byte(output[0]), &processes)
+	err = json.Unmarshal([]byte(output), &processes)
 	FreakOut(err)
 
 	if len(processes.Processes) > 0 {

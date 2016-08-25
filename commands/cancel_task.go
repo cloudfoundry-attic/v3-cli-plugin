@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/cloudfoundry/cli/plugin"
@@ -22,11 +23,12 @@ func CancelTask(cliConnection plugin.CliConnection, args []string) {
 	appName := args[1]
 	taskName := args[2]
 
-	output, err := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps?names=%s", appName))
+	rawOutput, err := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps?names=%s", appName))
 	util.FreakOut(err)
+	output := strings.Join(rawOutput, "")
 
 	apps := models.V3AppsModel{}
-	json.Unmarshal([]byte(output[0]), &apps)
+	json.Unmarshal([]byte(output), &apps)
 
 	if len(apps.Apps) == 0 {
 		fmt.Printf("App %s not found\n", appName)
@@ -35,11 +37,12 @@ func CancelTask(cliConnection plugin.CliConnection, args []string) {
 
 	appGuid := apps.Apps[0].Guid
 
-	tasksJson, err := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/tasks", appGuid))
+	rawTasksJson, err := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/tasks", appGuid))
 	util.FreakOut(err)
+	tasksJson := strings.Join(rawTasksJson, "")
 
 	tasks := models.V3TasksModel{}
-	err = json.Unmarshal([]byte(tasksJson[0]), &tasks)
+	err = json.Unmarshal([]byte(tasksJson), &tasks)
 	util.FreakOut(err)
 
 	var runningTasks []runningTask
@@ -53,8 +56,9 @@ func CancelTask(cliConnection plugin.CliConnection, args []string) {
 		fmt.Println("No running task found. Task name:", taskName)
 		return
 	} else if len(runningTasks) == 1 {
-		output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/tasks/%s/cancel", runningTasks[0].guid), "-X", "PUT", "-d", "{}")
+		rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/tasks/%s/cancel", runningTasks[0].guid), "-X", "PUT", "-d", "{}")
 		util.FreakOut(err)
+		output := strings.Join(rawOutput, "")
 		fmt.Println(output)
 		return
 	} else {
@@ -80,8 +84,9 @@ func CancelTask(cliConnection plugin.CliConnection, args []string) {
 			i, _ = strconv.ParseInt(str, 10, 32)
 		}
 
-		output, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/tasks/%s/cancel", runningTasks[i-1].guid), "-X", "PUT", "-d", "{}")
+		rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/tasks/%s/cancel", runningTasks[i-1].guid), "-X", "PUT", "-d", "{}")
 		util.FreakOut(err)
+		output := strings.Join(rawOutput, "")
 		fmt.Println(output)
 	}
 }
