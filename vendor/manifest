@@ -1,0 +1,31 @@
+{
+	"version": 0,
+	"dependencies": [
+		{
+			"importpath": "github.com/cloudfoundry/cli",
+			"repository": "https://github.com/cloudfoundry/cli",
+			"vcs": "git",
+			"revision": "5201bc00a981112a646a92098cb49a313cc2aa43",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/gogo/protobuf/proto/testdata",
+			"repository": "https://github.com/gogo/protobuf",
+			"vcs": "git",
+			"revision": "eef57b91ebc24ad030d8e7ec04ff30ce832a3df3",
+			"branch": "master",
+			"path": "/proto/testdata",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/golang/protobuf/proto/testdata",
+			"repository": "https://github.com/golang/protobuf",
+			"vcs": "git",
+			"revision": "888eb0692c857ec880338addf316bd662d5e630e",
+			"branch": "master",
+			"path": "/proto/testdata",
+			"notests": true
+		}
+	]
+}
