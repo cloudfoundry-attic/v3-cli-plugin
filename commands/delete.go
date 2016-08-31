@@ -3,6 +3,7 @@ package commands
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/cloudfoundry/cli/plugin"
@@ -11,9 +12,13 @@ import (
 
 func Delete(cliConnection plugin.CliConnection, args []string) {
 	appName := args[1]
+
+	urlValues := url.Values{}
+	urlValues.Add("names", args[1])
+
 	fmt.Printf("Deleting app %s...\n", appName)
 
-	rawOutput, _ := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps?names=%s", appName))
+	rawOutput, _ := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps?%s", urlValues.Encode()))
 	apps := V3AppsModel{}
 	output := strings.Join(rawOutput, "")
 	json.Unmarshal([]byte(output), &apps)
