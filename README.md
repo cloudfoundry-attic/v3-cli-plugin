@@ -69,20 +69,8 @@ Members of the CF CAPI team should have access. If you do end up making changes,
 
 1. Make your changes
 1. Bump the version number in v3.go
-1. Before compiling the binary, you have to setup the cli repo, as described below
 1. Compile a new binary via `go build v3.go`, move the binary to bin/OSX_binary
 1. Commit your changes
-
-Setup the cli repo:
-
-```shell
-go get github.com/tools/godep
-go get github.com/cloudfoundry/cli
-pushd "${GOPATH}/src/github.com/cloudfoundry/cli"
-godep restore
-rm -rf vendor
-popd
-```
 
 ##Running tests
 

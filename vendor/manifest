@@ -2,6 +2,14 @@
 	"version": 0,
 	"dependencies": [
 		{
+			"importpath": "github.com/cloudfoundry-incubator/uaago",
+			"repository": "https://github.com/cloudfoundry-incubator/uaago",
+			"vcs": "git",
+			"revision": "1db9cfd27865007e07ffd5914c0fdf5fb7fc09ba",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/cloudfoundry/cli",
 			"repository": "https://github.com/cloudfoundry/cli",
 			"vcs": "git",
@@ -10,12 +18,89 @@
 			"notests": true
 		},
 		{
-			"importpath": "github.com/gogo/protobuf/proto/testdata",
+			"importpath": "github.com/cloudfoundry/dropsonde",
+			"repository": "https://github.com/cloudfoundry/dropsonde",
+			"vcs": "git",
+			"revision": "4d5386dd4a1d7428dfd290b418fcf034e8d06bea",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry/gosteno",
+			"repository": "https://github.com/cloudfoundry/gosteno",
+			"vcs": "git",
+			"revision": "0c8581caea35ac903728230e447792e2365dcc34",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry/loggregator_consumer",
+			"repository": "https://github.com/cloudfoundry/loggregator_consumer",
+			"vcs": "git",
+			"revision": "eef2afce51e4fa4d56ed94eb02c9bba38d7b4572",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry/loggregatorlib/logmessage",
+			"repository": "https://github.com/cloudfoundry/loggregatorlib",
+			"vcs": "git",
+			"revision": "03bfd6ee4743a1a21433092663292b65aa4ee14e",
+			"branch": "master",
+			"path": "/logmessage",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry/loggregatorlib/signature",
+			"repository": "https://github.com/cloudfoundry/loggregatorlib",
+			"vcs": "git",
+			"revision": "03bfd6ee4743a1a21433092663292b65aa4ee14e",
+			"branch": "master",
+			"path": "signature",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry/noaa",
+			"repository": "https://github.com/cloudfoundry/noaa",
+			"vcs": "git",
+			"revision": "c2c343ac099f2de5915968ff241e4c780f9758b8",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry/sonde-go/events",
+			"repository": "https://github.com/cloudfoundry/sonde-go",
+			"vcs": "git",
+			"revision": "1e05e0f44d5618f7a13662cf609f0f8bbbf770ea",
+			"branch": "master",
+			"path": "/events",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/gogo/protobuf/gogoproto",
 			"repository": "https://github.com/gogo/protobuf",
 			"vcs": "git",
-			"revision": "eef57b91ebc24ad030d8e7ec04ff30ce832a3df3",
+			"revision": "d7788ac7ca647999a3775cb756e449ab177dd138",
 			"branch": "master",
-			"path": "/proto/testdata",
+			"path": "/gogoproto",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/gogo/protobuf/proto",
+			"repository": "https://github.com/gogo/protobuf",
+			"vcs": "git",
+			"revision": "d7788ac7ca647999a3775cb756e449ab177dd138",
+			"branch": "master",
+			"path": "/proto",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/gogo/protobuf/protoc-gen-gogo/descriptor",
+			"repository": "https://github.com/gogo/protobuf",
+			"vcs": "git",
+			"revision": "d7788ac7ca647999a3775cb756e449ab177dd138",
+			"branch": "master",
+			"path": "protoc-gen-gogo/descriptor",
 			"notests": true
 		},
 		{
@@ -25,6 +110,49 @@
 			"revision": "888eb0692c857ec880338addf316bd662d5e630e",
 			"branch": "master",
 			"path": "/proto/testdata",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/gorilla/websocket",
+			"repository": "https://github.com/gorilla/websocket",
+			"vcs": "git",
+			"revision": "a69d25be2fe2923a97c2af6849b2f52426f68fc0",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/nu7hatch/gouuid",
+			"repository": "https://github.com/nu7hatch/gouuid",
+			"vcs": "git",
+			"revision": "179d4d0c4d8d407a32af483c2354df1d2c91e6c3",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/stretchr/testify/assert",
+			"repository": "https://github.com/stretchr/testify",
+			"vcs": "git",
+			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
+			"branch": "master",
+			"path": "/assert",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/stretchr/testify/vendor/github.com/davecgh/go-spew/spew",
+			"repository": "https://github.com/stretchr/testify",
+			"vcs": "git",
+			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
+			"branch": "master",
+			"path": "vendor/github.com/davecgh/go-spew/spew",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/stretchr/testify/vendor/github.com/pmezard/go-difflib/difflib",
+			"repository": "https://github.com/stretchr/testify",
+			"vcs": "git",
+			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
+			"branch": "master",
+			"path": "vendor/github.com/pmezard/go-difflib/difflib",
 			"notests": true
 		}
 	]
