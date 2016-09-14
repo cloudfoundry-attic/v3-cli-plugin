@@ -22,13 +22,25 @@ func Processes(cliConnection plugin.CliConnection, args []string) {
 	err = json.Unmarshal([]byte(output), &processes)
 	FreakOut(err)
 
+	rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", "v3/apps?per_page=5000", "-X", "GET")
+	FreakOut(err)
+	output = strings.Join(rawOutput, "")
+	apps := V3AppsModel{}
+	err = json.Unmarshal([]byte(output), &apps)
+	FreakOut(err)
+	appsMap := make(map[string]V3AppModel)
+	for _, app := range apps.Apps {
+		appsMap[app.Guid] = app
+	}
+
 	if len(processes.Processes) > 0 {
 		processesTable := NewTable([]string{("app"), ("type"), ("instances"), ("memory in MB"), ("disk in MB")})
 		for _, v := range processes.Processes {
 			if strings.Contains(v.Links.Space.Href, mySpace.Guid) {
 				appName := "N/A"
 				if v.Links.App.Href != "/v3/apps/" {
-					appName = strings.Split(v.Links.App.Href, "/v3/apps/")[1]
+					appGuid := strings.Split(v.Links.App.Href, "/v3/apps/")[1]
+					appName = appsMap[appGuid].Name
 				}
 				processesTable.Add(
 					appName,
@@ -39,7 +51,6 @@ func Processes(cliConnection plugin.CliConnection, args []string) {
 				)
 			}
 		}
-		fmt.Println("print table?")
 		processesTable.Print()
 	} else {
 		fmt.Println("No v3 processes found.")
