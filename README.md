@@ -48,8 +48,10 @@ Binds a service instance to a v3 app.
 
 #Installing
 
+**Examples are for Mac, replace the URL extension with the appropriate (windows, linux) one.**
+
 ```
-cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/blob/master/bin/OSX_binary?raw=true
+cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/releases/download/v0.5.2/v3-cli-plugin.osx
 ```
 
 If you have already installed the plugin, you must uninstall it before installing an updated version
@@ -61,7 +63,7 @@ cf uninstall-plugin v3_beta
 If you love copy-pasting and want all the things
 
 ```
-cf uninstall-plugin v3_beta; cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/blob/master/bin/OSX_binary?raw=true -f
+cf uninstall-plugin v3_beta; cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/releases/download/v0.5.2/v3-cli-plugin.osx -f
 ```
 
 #Contributing
@@ -70,8 +72,9 @@ Members of the CF CAPI team should have access. If you do end up making changes,
 1. Make your changes
 1. Bump the version number in v3.go
 1. Before compiling the binary, you have to setup the cli repo, as described below
-1. Compile a new binary via `go build v3.go`, move the binary to bin/OSX_binary
 1. Commit your changes
+
+Releases are made by the team and uploaded to https://github.com/cloudfoundry/v3-cli-plugin/releases when necessary.
 
 Setup the cli repo:
 
