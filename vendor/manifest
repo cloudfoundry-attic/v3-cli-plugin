@@ -2,6 +2,22 @@
 	"version": 0,
 	"dependencies": [
 		{
+			"importpath": "github.com/blang/semver",
+			"repository": "https://github.com/blang/semver",
+			"vcs": "git",
+			"revision": "60ec3488bfea7cca02b021d106d9911120d25fe9",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry-incubator/uaago",
+			"repository": "https://github.com/cloudfoundry-incubator/uaago",
+			"vcs": "git",
+			"revision": "1db9cfd27865007e07ffd5914c0fdf5fb7fc09ba",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/cloudfoundry/cli",
 			"repository": "https://github.com/cloudfoundry/cli",
 			"vcs": "git",
@@ -10,12 +26,124 @@
 			"notests": true
 		},
 		{
-			"importpath": "github.com/gogo/protobuf/proto/testdata",
+			"importpath": "github.com/cloudfoundry/dropsonde",
+			"repository": "https://github.com/cloudfoundry/dropsonde",
+			"vcs": "git",
+			"revision": "f48f2799e277693949788109eb9b21c3b2b42a60",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry/gofileutils/fileutils",
+			"repository": "https://github.com/cloudfoundry/gofileutils",
+			"vcs": "git",
+			"revision": "511ba4f8a696af09fe7637d0f303675a246232ee",
+			"branch": "master",
+			"path": "/fileutils",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry/gosteno",
+			"repository": "https://github.com/cloudfoundry/gosteno",
+			"vcs": "git",
+			"revision": "0c8581caea35ac903728230e447792e2365dcc34",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry/loggregator_consumer",
+			"repository": "https://github.com/cloudfoundry/loggregator_consumer",
+			"vcs": "git",
+			"revision": "eef2afce51e4fa4d56ed94eb02c9bba38d7b4572",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry/loggregatorlib/logmessage",
+			"repository": "https://github.com/cloudfoundry/loggregatorlib",
+			"vcs": "git",
+			"revision": "9e579b1ddbee87b576713bc01556a4d07053a1b3",
+			"branch": "master",
+			"path": "/logmessage",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry/loggregatorlib/signature",
+			"repository": "https://github.com/cloudfoundry/loggregatorlib",
+			"vcs": "git",
+			"revision": "9e579b1ddbee87b576713bc01556a4d07053a1b3",
+			"branch": "master",
+			"path": "signature",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry/noaa",
+			"repository": "https://github.com/cloudfoundry/noaa",
+			"vcs": "git",
+			"revision": "80008a261d9c412c51e2637f8af4883105e6a1a5",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/cloudfoundry/sonde-go/events",
+			"repository": "https://github.com/cloudfoundry/sonde-go",
+			"vcs": "git",
+			"revision": "a8900cb06815469da901e8f3f6bbe15c9e798291",
+			"branch": "master",
+			"path": "/events",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/fatih/color",
+			"repository": "https://github.com/fatih/color",
+			"vcs": "git",
+			"revision": "87d4004f2ab62d0d255e0a38f1680aa534549fe3",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/gogo/protobuf/gogoproto",
 			"repository": "https://github.com/gogo/protobuf",
 			"vcs": "git",
-			"revision": "eef57b91ebc24ad030d8e7ec04ff30ce832a3df3",
+			"revision": "a11c89fbb0ad4acfa8abc4a4d5f7e27c477169b1",
 			"branch": "master",
-			"path": "/proto/testdata",
+			"path": "/gogoproto",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/gogo/protobuf/proto",
+			"repository": "https://github.com/gogo/protobuf",
+			"vcs": "git",
+			"revision": "a11c89fbb0ad4acfa8abc4a4d5f7e27c477169b1",
+			"branch": "master",
+			"path": "/proto",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/gogo/protobuf/protoc-gen-gogo/descriptor",
+			"repository": "https://github.com/gogo/protobuf",
+			"vcs": "git",
+			"revision": "a11c89fbb0ad4acfa8abc4a4d5f7e27c477169b1",
+			"branch": "master",
+			"path": "protoc-gen-gogo/descriptor",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/gogo/protobuf/sortkeys",
+			"repository": "https://github.com/gogo/protobuf",
+			"vcs": "git",
+			"revision": "a11c89fbb0ad4acfa8abc4a4d5f7e27c477169b1",
+			"branch": "master",
+			"path": "sortkeys",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/gogo/protobuf/types",
+			"repository": "https://github.com/gogo/protobuf",
+			"vcs": "git",
+			"revision": "a11c89fbb0ad4acfa8abc4a4d5f7e27c477169b1",
+			"branch": "master",
+			"path": "types",
 			"notests": true
 		},
 		{
@@ -25,6 +153,117 @@
 			"revision": "888eb0692c857ec880338addf316bd662d5e630e",
 			"branch": "master",
 			"path": "/proto/testdata",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/gorilla/websocket",
+			"repository": "https://github.com/gorilla/websocket",
+			"vcs": "git",
+			"revision": "2d1e4548da234d9cb742cc3628556fef86aafbac",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/mattn/go-colorable",
+			"repository": "https://github.com/mattn/go-colorable",
+			"vcs": "git",
+			"revision": "ed8eb9e318d7a84ce5915b495b7d35e0cfe7b5a8",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/mattn/go-isatty",
+			"repository": "https://github.com/mattn/go-isatty",
+			"vcs": "git",
+			"revision": "66b8e73f3f5cda9f96b69efd03dd3d7fc4a5cdb8",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/nicksnyder/go-i18n/i18n",
+			"repository": "https://github.com/nicksnyder/go-i18n",
+			"vcs": "git",
+			"revision": "37e5c2de3e03e4b82693e3fcb4a6aa2cc4eb07e3",
+			"branch": "master",
+			"path": "/i18n",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/nu7hatch/gouuid",
+			"repository": "https://github.com/nu7hatch/gouuid",
+			"vcs": "git",
+			"revision": "179d4d0c4d8d407a32af483c2354df1d2c91e6c3",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/simonleung8/flags",
+			"repository": "https://github.com/simonleung8/flags",
+			"vcs": "git",
+			"revision": "ae5fa132d3df01cc63a083ac097f0688a43030b7",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/stretchr/testify/assert",
+			"repository": "https://github.com/stretchr/testify",
+			"vcs": "git",
+			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
+			"branch": "master",
+			"path": "/assert",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/stretchr/testify/vendor/github.com/davecgh/go-spew/spew",
+			"repository": "https://github.com/stretchr/testify",
+			"vcs": "git",
+			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
+			"branch": "master",
+			"path": "vendor/github.com/davecgh/go-spew/spew",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/stretchr/testify/vendor/github.com/pmezard/go-difflib/difflib",
+			"repository": "https://github.com/stretchr/testify",
+			"vcs": "git",
+			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
+			"branch": "master",
+			"path": "vendor/github.com/pmezard/go-difflib/difflib",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/crypto/ssh/terminal",
+			"repository": "https://go.googlesource.com/crypto",
+			"vcs": "git",
+			"revision": "81372b2fc2f10bef2a7f338da115c315a56b2726",
+			"branch": "master",
+			"path": "/ssh/terminal",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/net/websocket",
+			"repository": "https://go.googlesource.com/net",
+			"vcs": "git",
+			"revision": "71a035914f99bb58fe82eac0f1289f10963d876c",
+			"branch": "master",
+			"path": "/websocket",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/sys/unix",
+			"repository": "https://go.googlesource.com/sys",
+			"vcs": "git",
+			"revision": "8f0908ab3b2457e2e15403d3697c9ef5cb4b57a9",
+			"branch": "master",
+			"path": "/unix",
+			"notests": true
+		},
+		{
+			"importpath": "gopkg.in/yaml.v2",
+			"repository": "https://gopkg.in/yaml.v2",
+			"vcs": "git",
+			"revision": "31c299268d302dd0aa9a0dcf765a3d58971ac83f",
+			"branch": "v2",
 			"notests": true
 		}
 	]
