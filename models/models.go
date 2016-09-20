@@ -19,6 +19,7 @@ type V3ProcessModel struct {
 }
 
 type V3TaskModel struct {
+	Id        int       `json:"sequence_id"`
 	Name      string    `json:"name"`
 	Guid      string    `json:"guid"`
 	Command   string    `json:"command"`

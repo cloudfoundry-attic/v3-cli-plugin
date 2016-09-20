@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"strconv"
 
 	"github.com/cloudfoundry/cli/plugin"
 	. "github.com/cloudfoundry/v3-cli-plugin/models"
@@ -34,9 +35,10 @@ func Tasks(cliConnection plugin.CliConnection, args []string) {
 	FreakOut(err)
 
 	if len(tasks.Tasks) > 0 {
-		tasksTable := NewTable([]string{("name"), ("command"), ("state")})
+		tasksTable := NewTable([]string{("id"), ("name"), ("command"), ("state")})
 		for _, v := range tasks.Tasks {
 			tasksTable.Add(
+				strconv.Itoa(v.Id),
 				v.Name,
 				v.Command,
 				v.State,
