@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/cloudfoundry/cli/plugin"
 	"github.com/cloudfoundry/v3-cli-plugin/models"
@@ -15,7 +16,11 @@ func RunTask(cliConnection plugin.CliConnection, args []string) {
 	taskName := args[2]
 	taskCommand := args[3]
 
-	fmt.Printf("Running task %s on app %s...\n", taskName, appName)
+	fmt.Println("OK\n")
+	fmt.Printf("Running task %s on app %s...\n\n", taskName, appName)
+
+	go Logs(cliConnection, args)
+	time.Sleep(2 * time.Second) // b/c sharing the cliConnection makes things break
 
 	rawOutput, _ := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps?names=%s", appName))
 	output := strings.Join(rawOutput, "")
@@ -26,11 +31,10 @@ func RunTask(cliConnection plugin.CliConnection, args []string) {
 		fmt.Printf("App %s not found\n", appName)
 		return
 	}
-
 	appGuid := apps.Apps[0].Guid
 
 	body := fmt.Sprintf(`{
-		"name": "%s", 
+		"name": "%s",
 		"command": "%s"
 	}`, taskName, taskCommand)
 
@@ -49,5 +53,7 @@ func RunTask(cliConnection plugin.CliConnection, args []string) {
 		return
 	}
 
-	fmt.Println("OK")
+	util.Poll(cliConnection, fmt.Sprintf("/v3/tasks/%s", task.Guid), "SUCCEEDED", 1*time.Minute, "Task failed to run")
+
+	fmt.Printf("Task %s successfully completed.\n", task.Guid)
 }
