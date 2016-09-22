@@ -25,6 +25,7 @@ type V3TaskModel struct {
 	Command   string    `json:"command"`
 	State     string    `json:"state"`
 	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type V3AppsModel struct {

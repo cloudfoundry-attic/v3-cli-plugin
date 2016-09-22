@@ -3,8 +3,8 @@ package commands
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 	"strconv"
+	"strings"
 
 	"github.com/cloudfoundry/cli/plugin"
 	. "github.com/cloudfoundry/v3-cli-plugin/models"
@@ -35,13 +35,14 @@ func Tasks(cliConnection plugin.CliConnection, args []string) {
 	FreakOut(err)
 
 	if len(tasks.Tasks) > 0 {
-		tasksTable := NewTable([]string{("id"), ("name"), ("command"), ("state")})
+		tasksTable := NewTable([]string{("id"), ("state"), ("start time"), ("name"), ("command")})
 		for _, v := range tasks.Tasks {
 			tasksTable.Add(
 				strconv.Itoa(v.Id),
+				v.State,
+				v.CreatedAt.Format("Jan 2, 15:04:05 MST"),
 				v.Name,
 				v.Command,
-				v.State,
 			)
 		}
 		tasksTable.Print()
