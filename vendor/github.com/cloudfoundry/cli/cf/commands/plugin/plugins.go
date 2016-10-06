@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/cloudfoundry/cli/cf/commandregistry"
-	"github.com/cloudfoundry/cli/cf/configuration/pluginconfig"
-	"github.com/cloudfoundry/cli/cf/flags"
-	. "github.com/cloudfoundry/cli/cf/i18n"
-	"github.com/cloudfoundry/cli/cf/requirements"
-	"github.com/cloudfoundry/cli/cf/terminal"
-	"github.com/cloudfoundry/cli/utils"
-	"github.com/cloudfoundry/cli/utils/sortutils"
+	"code.cloudfoundry.org/cli/cf/commandregistry"
+	"code.cloudfoundry.org/cli/cf/configuration/pluginconfig"
+	"code.cloudfoundry.org/cli/cf/flags"
+	. "code.cloudfoundry.org/cli/cf/i18n"
+	"code.cloudfoundry.org/cli/cf/requirements"
+	"code.cloudfoundry.org/cli/cf/terminal"
+	"code.cloudfoundry.org/cli/utils"
+	"code.cloudfoundry.org/cli/utils/sortutils"
 )
 
 type Plugins struct {
@@ -72,11 +72,11 @@ func (cmd *Plugins) Execute(c flags.FlagContext) error {
 		table = cmd.ui.Table([]string{T("Plugin Name"), T("Version"), T("Command Name"), T("Command Help")})
 	}
 
-	var sortedPluginNames []string
+	var sortedPluginNames sortutils.Alphabetic
 	for k := range plugins {
 		sortedPluginNames = append(sortedPluginNames, k)
 	}
-	sort.Sort(sortutils.Alphabetic(sortedPluginNames))
+	sort.Sort(sortedPluginNames)
 
 	for _, pluginName := range sortedPluginNames {
 		metadata := plugins[pluginName]

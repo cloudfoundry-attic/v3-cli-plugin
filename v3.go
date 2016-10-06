@@ -73,8 +73,8 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 		Name: "v3_beta",
 		Version: plugin.VersionType{
 			Major: 0,
-			Minor: 5,
-			Build: 4,
+			Minor: 6,
+			Build: 5,
 		},
 		Commands: []plugin.Command{
 			{

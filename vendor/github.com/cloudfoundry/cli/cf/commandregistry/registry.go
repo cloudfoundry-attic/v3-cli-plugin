@@ -6,32 +6,25 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/cloudfoundry/cli/cf"
-	"github.com/cloudfoundry/cli/cf/configuration/confighelpers"
-	"github.com/cloudfoundry/cli/cf/configuration/coreconfig"
-	"github.com/cloudfoundry/cli/cf/flags"
-	. "github.com/cloudfoundry/cli/cf/i18n"
+	"code.cloudfoundry.org/cli/cf"
+	"code.cloudfoundry.org/cli/cf/flags"
+	. "code.cloudfoundry.org/cli/cf/i18n"
+	"code.cloudfoundry.org/cli/utils/configv3"
 
-	. "github.com/cloudfoundry/cli/cf/terminal"
+	. "code.cloudfoundry.org/cli/cf/terminal"
 )
 
 var _ = initI18nFunc()
 var Commands = NewRegistry()
 
 func initI18nFunc() bool {
-	errorHandler := func(err error) {
-		if err != nil {
-			fmt.Println(FailureColor("FAILED"))
-			fmt.Println("Error read/writing config: ", err.Error())
-			os.Exit(1)
-		}
-	}
-
-	configPath, err := confighelpers.DefaultFilePath()
+	config, err := configv3.LoadConfig()
 	if err != nil {
-		errorHandler(err)
+		fmt.Println(FailureColor("FAILED"))
+		fmt.Println("Error read/writing config: ", err.Error())
+		os.Exit(1)
 	}
-	T = Init(coreconfig.NewRepositoryFromFilepath(configPath, errorHandler))
+	T = Init(config)
 	return true
 }
 

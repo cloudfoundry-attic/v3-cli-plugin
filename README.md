@@ -51,7 +51,7 @@ Binds a service instance to a v3 app.
 **Examples are for Mac, replace the URL extension with the appropriate (windows, linux) one.**
 
 ```
-cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/releases/download/0.5.4/v3-cli-plugin.osx
+cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/releases/download/0.6.5/v3-cli-plugin.osx
 ```
 
 If you have already installed the plugin, you must uninstall it before installing an updated version
@@ -63,7 +63,7 @@ cf uninstall-plugin v3_beta
 If you love copy-pasting and want all the things
 
 ```
-cf uninstall-plugin v3_beta; cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/releases/download/0.5.4/v3-cli-plugin.osx -f
+cf uninstall-plugin v3_beta; cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/releases/download/0.6.5/v3-cli-plugin.osx -f
 ```
 
 #Contributing
@@ -79,3 +79,15 @@ Releases are made by the team and uploaded to https://github.com/cloudfoundry/v3
 
 1. Install [Ginkgo](https://github.com/onsi/ginkgo)
 1. Run `ginkgo -r` in the root directory
+
+##Creating a Release
+
+Build the plugin using the following commands.
+
+```
+GOOS=linux GOARCH=amd64 go build -o v3-cli-plugin.linux &&
+GOOS=windows GOARCH=amd64 go build -o v3-cli-plugin.exe &&
+GOOS=darwin GOARCH=amd64 go build -o v3-cli-plugin.osx
+```
+
+Draft a new release in github using the compiled plugins.

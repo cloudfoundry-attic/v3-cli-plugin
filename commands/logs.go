@@ -10,9 +10,8 @@ import (
 
 	"github.com/cloudfoundry/cli/cf/api/logs"
 	"github.com/cloudfoundry/cli/cf/net"
-	"github.com/cloudfoundry/cli/cf/uihelpers"
-	consumer "github.com/cloudfoundry/loggregator_consumer"
-	"github.com/cloudfoundry/loggregatorlib/logmessage"
+	consumer "github.com/cloudfoundry/noaa/consumer"
+	"github.com/cloudfoundry/sonde-go/events"
 
 	"github.com/cloudfoundry/cli/plugin"
 	. "github.com/cloudfoundry/v3-cli-plugin/models"
@@ -32,68 +31,86 @@ func Logs(cliConnection plugin.CliConnection, args []string) {
 	}
 	app := apps.Apps[0]
 
-	messageQueue := logs.NewLoggregatorMessageQueue()
+	messageQueue := logs.NewNoaaMessageQueue()
 
 	bufferTime := 25 * time.Millisecond
 	ticker := time.NewTicker(bufferTime)
 
-	c := make(chan *logmessage.LogMessage)
+	logChan := make(chan logs.Loggable)
+	errChan := make(chan error)
 
-	loggregatorEndpoint, err := cliConnection.LoggregatorEndpoint()
+	dopplerEndpoint, err := cliConnection.DopplerEndpoint()
 	FreakOut(err)
 
 	ssl, err := cliConnection.IsSSLDisabled()
 	FreakOut(err)
 	tlsConfig := net.NewTLSConfig([]tls.Certificate{}, ssl)
 
-	loggregatorConsumer := consumer.New(loggregatorEndpoint, tlsConfig, http.ProxyFromEnvironment)
+	noaaConsumer := consumer.New(dopplerEndpoint, tlsConfig, http.ProxyFromEnvironment)
 	defer func() {
-		loggregatorConsumer.Close()
-		flushMessageQueue(c, messageQueue)
+		noaaConsumer.Close()
+		flushMessages(logChan, messageQueue)
 	}()
 
 	onConnect := func() {
 		fmt.Printf("Tailing logs for app %s...\r\n\r\n", appName)
 	}
-	loggregatorConsumer.SetOnConnectCallback(onConnect)
+	noaaConsumer.SetOnConnectCallback(onConnect)
 
 	accessToken, err := cliConnection.AccessToken()
 	FreakOut(err)
 
-	logChan, err := loggregatorConsumer.Tail(app.Guid, accessToken)
-	if err != nil {
-		FreakOut(err)
-	}
+	c, e := noaaConsumer.TailingLogs(app.Guid, accessToken)
 
 	go func() {
-		for _ = range ticker.C {
-			flushMessageQueue(c, messageQueue)
+		for {
+			select {
+			case msg, ok := <-c:
+				if !ok {
+					ticker.Stop()
+					flushMessages(logChan, messageQueue)
+					close(logChan)
+					close(errChan)
+					return
+				}
+
+				messageQueue.PushMessage(msg)
+			case err := <-e:
+				if err != nil {
+					errChan <- err
+
+					ticker.Stop()
+					close(logChan)
+					close(errChan)
+					return
+				}
+			}
 		}
 	}()
 
 	go func() {
-		for msg := range logChan {
-			messageQueue.PushMessage(msg)
+		for range ticker.C {
+			flushMessages(logChan, messageQueue)
 		}
-
-		flushMessageQueue(c, messageQueue)
-		close(c)
 	}()
 
-	for msg := range c {
-		fmt.Printf("%s\r\n", logMessageOutput(msg, time.Local))
+	for {
+		select {
+		case msg := <-logChan:
+			fmt.Printf("%s\r\n", logMessageOutput(msg, time.Local))
+		case err, ok := <-errChan:
+			if !ok {
+				FreakOut(err)
+			}
+		}
 	}
 }
 
-func flushMessageQueue(c chan *logmessage.LogMessage, messageQueue *logs.LoggregatorMessageQueue) {
-	messageQueue.EnumerateAndClear(func(m *logmessage.LogMessage) {
-		c <- m
+func flushMessages(c chan <- logs.Loggable, messageQueue *logs.NoaaMessageQueue) {
+	messageQueue.EnumerateAndClear(func(m *events.LogMessage) {
+		c <- logs.NewNoaaLogMessage(m)
 	})
 }
-
-func logMessageOutput(msg *logmessage.LogMessage, loc *time.Location) string {
-	logHeader, coloredLogHeader := uihelpers.ExtractLogHeader(msg, loc)
-	logContent := uihelpers.ExtractLogContent(msg, logHeader)
-
-	return fmt.Sprintf("%s%s", coloredLogHeader, logContent)
+func logMessageOutput(msg logs.Loggable, loc *time.Location) string {
+	return fmt.Sprintf("%s", msg.ToLog(loc))
 }
