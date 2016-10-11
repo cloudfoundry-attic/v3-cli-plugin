@@ -8,12 +8,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cloudfoundry/cli/cf/api/logs"
-	"github.com/cloudfoundry/cli/cf/net"
+	"code.cloudfoundry.org/cli/cf/api/logs"
+	"code.cloudfoundry.org/cli/cf/net"
 	consumer "github.com/cloudfoundry/noaa/consumer"
 	"github.com/cloudfoundry/sonde-go/events"
 
-	"github.com/cloudfoundry/cli/plugin"
+	"code.cloudfoundry.org/cli/plugin"
 	. "github.com/cloudfoundry/v3-cli-plugin/models"
 	. "github.com/cloudfoundry/v3-cli-plugin/util"
 )
@@ -106,7 +106,7 @@ func Logs(cliConnection plugin.CliConnection, args []string) {
 	}
 }
 
-func flushMessages(c chan <- logs.Loggable, messageQueue *logs.NoaaMessageQueue) {
+func flushMessages(c chan<- logs.Loggable, messageQueue *logs.NoaaMessageQueue) {
 	messageQueue.EnumerateAndClear(func(m *events.LogMessage) {
 		c <- logs.NewNoaaLogMessage(m)
 	})

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cloudfoundry/cli/cf/appfiles"
-	"github.com/cloudfoundry/cli/plugin"
+	"code.cloudfoundry.org/cli/cf/appfiles"
+	"code.cloudfoundry.org/cli/plugin"
 	"github.com/cloudfoundry/gofileutils/fileutils"
 	. "github.com/cloudfoundry/v3-cli-plugin/models"
 	. "github.com/cloudfoundry/v3-cli-plugin/util"

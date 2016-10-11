@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cloudfoundry/cli/plugin"
+	"code.cloudfoundry.org/cli/plugin"
 	"github.com/cloudfoundry/v3-cli-plugin/models"
 	"github.com/cloudfoundry/v3-cli-plugin/util"
 )

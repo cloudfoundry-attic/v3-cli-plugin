@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/cloudfoundry/cli/plugin"
+	"code.cloudfoundry.org/cli/plugin"
 	. "github.com/cloudfoundry/v3-cli-plugin/models"
 	. "github.com/cloudfoundry/v3-cli-plugin/util"
 	"github.com/simonleung8/flags"

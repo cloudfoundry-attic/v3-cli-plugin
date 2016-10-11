@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	io_helpers "github.com/cloudfoundry/cli/testhelpers/io"
+	io_helpers "code.cloudfoundry.org/cli/testhelpers/io"
 	. "github.com/cloudfoundry/v3-cli-plugin/commands"
 	fakes "github.com/cloudfoundry/v3-cli-plugin/fakes"
 )
