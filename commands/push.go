@@ -11,7 +11,7 @@ import (
 
 	"code.cloudfoundry.org/cli/cf/appfiles"
 	"code.cloudfoundry.org/cli/plugin"
-	"github.com/cloudfoundry/gofileutils/fileutils"
+	"code.cloudfoundry.org/gofileutils/fileutils"
 	. "github.com/cloudfoundry/v3-cli-plugin/models"
 	. "github.com/cloudfoundry/v3-cli-plugin/util"
 	"github.com/simonleung8/flags"
