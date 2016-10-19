@@ -15,7 +15,6 @@ func Apps(cliConnection plugin.CliConnection, args []string) {
 	mySpace, err := cliConnection.GetCurrentSpace()
 	util.FreakOut(err)
 	rawOutput, err := cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("v3/apps?space_guids=%s", mySpace.Guid), "-X", "GET")
-	fmt.Println("APPLE: ", rawOutput)
 	output := strings.Join(rawOutput, "")
 	util.FreakOut(err)
 	apps := V3AppsModel{}
