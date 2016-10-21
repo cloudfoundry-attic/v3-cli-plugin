@@ -51,7 +51,7 @@ Binds a service instance to a v3 app.
 **Examples are for Mac, replace the URL extension with the appropriate (windows, linux) one.**
 
 ```
-cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/releases/download/0.6.5/v3-cli-plugin.osx
+cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/releases/download/0.6.6/v3-cli-plugin.osx
 ```
 
 If you have already installed the plugin, you must uninstall it before installing an updated version
@@ -63,7 +63,7 @@ cf uninstall-plugin v3_beta
 If you love copy-pasting and want all the things
 
 ```
-cf uninstall-plugin v3_beta; cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/releases/download/0.6.5/v3-cli-plugin.osx -f
+cf uninstall-plugin v3_beta; cf install-plugin https://github.com/cloudfoundry/v3-cli-plugin/releases/download/0.6.6/v3-cli-plugin.osx -f
 ```
 
 #Contributing
