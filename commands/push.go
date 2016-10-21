@@ -57,7 +57,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	if app.Error_Code != "" {
 		FreakOut(errors.New("Error creating v3 app: " + app.Error_Code))
 	}
-
+	time.Sleep(2 * time.Second) // wait for app to settle before kicking off the log streamer
 	go Logs(cliConnection, args)
 	time.Sleep(2 * time.Second) // b/c sharing the cliConnection makes things break
 
@@ -102,7 +102,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 		})
 
 		//waiting for cc to pour bits into blobstore
-		Poll(cliConnection, fmt.Sprintf("/v3/packages/%s", pack.Guid), "READY", 1*time.Minute, "Package failed to upload")
+		Poll(cliConnection, fmt.Sprintf("/v3/packages/%s", pack.Guid), "READY", 5*time.Minute, "Package failed to upload")
 	}
 
 	rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/packages/%s/droplets", pack.Guid), "-X", "POST", "-d", "{}")
@@ -114,7 +114,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 		FreakOut(errors.New("error marshaling the v3 droplet: " + err.Error()))
 	}
 	//wait for the droplet to be ready
-	Poll(cliConnection, fmt.Sprintf("/v3/droplets/%s", droplet.Guid), "STAGED", 1*time.Minute, "Droplet failed to stage")
+	Poll(cliConnection, fmt.Sprintf("/v3/droplets/%s", droplet.Guid), "STAGED", 10*time.Minute, "Droplet failed to stage")
 
 	//assign droplet to the app
 	rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/droplets/current", app.Guid), "-X", "PUT", "-d", fmt.Sprintf("{\"droplet_guid\":\"%s\"}", droplet.Guid))
