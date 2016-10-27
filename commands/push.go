@@ -97,7 +97,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 		zipper := appfiles.ApplicationZipper{}
 		fileutils.TempFile("uploads", func(zipFile *os.File, err error) {
 			zipper.Zip(appDir, zipFile)
-			_, upload := exec.Command("curl", fmt.Sprintf("%s/v3/packages/%s/upload", apiString, pack.Guid), "-F", fmt.Sprintf("bits=@%s", zipFile.Name()), "-H", fmt.Sprintf("Authorization: %s", token)).Output()
+			_, upload := exec.Command("curl", fmt.Sprintf("%s/v3/packages/%s/upload", apiString, pack.Guid), "-F", fmt.Sprintf("bits=@%s", zipFile.Name()), "-H", fmt.Sprintf("Authorization: %s", token), "-H", "Expect:").Output()
 			FreakOut(upload)
 		})
 
