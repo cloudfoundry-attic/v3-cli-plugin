@@ -43,7 +43,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	if dockerImage != "" {
 		lifecycle = `"lifecycle": { "type": "docker", "data": {} }`
 	} else {
-		lifecycle = fmt.Sprintf(`"lifecycle": { "type": "buildpack", "data": { "buildpack": %s } }`, buildpack)
+		lifecycle = fmt.Sprintf(`"lifecycle": { "type": "buildpack", "data": { "buildpacks": [%s] } }`, buildpack)
 	}
 
 	//create the app
@@ -64,8 +64,8 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	//create package
 	pack := V3PackageModel{}
 	if dockerImage != "" {
-		request := fmt.Sprintf(`{"type": "docker", "data": {"image": %s}}`, dockerImage)
-		rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/packages", app.Guid), "-X", "POST", "-d", request)
+		request := fmt.Sprintf(`{"type": "docker", "data": {"image": %s}, "relationships": {"app":{"guid":"%s"}}}`, dockerImage, app.Guid)
+		rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/packages", "-X", "POST", "-d", request)
 		FreakOut(err)
 		output = strings.Join(rawOutput, "")
 
@@ -75,7 +75,8 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 		}
 	} else {
 		//create the empty package to upload the app bits to
-		rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/packages", app.Guid), "-X", "POST", "-d", "{\"type\": \"bits\"}")
+		request := fmt.Sprintf(`{"type": "bits", "relationships": {"app":{"guid":"%s"}}}`, app.Guid)
+		rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/packages", "-X", "POST", "-d", request)
 		FreakOut(err)
 		output = strings.Join(rawOutput, "")
 
