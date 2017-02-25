@@ -10,6 +10,13 @@ type V3AppModel struct {
 	Instances  int `json:"total_desired_instances"`
 }
 
+type V3IsolationSegmentModel struct {
+	Guid      string
+	Name      string
+	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
 type V3ProcessModel struct {
 	Type      string
 	Instances int

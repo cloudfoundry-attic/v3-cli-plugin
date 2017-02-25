@@ -65,6 +65,12 @@ func (v3plugin *V3Plugin) Run(cliConnection plugin.CliConnection, args []string)
 		} else {
 			fmt.Printf("Wrong number of argument, type `cf %s -h` for help\n", args[0])
 		}
+	} else if args[0] == "v3-create-iso-seg" {
+		if len(args) == 2 {
+			commands.CreateIsolationSegment(cliConnection, args)
+		} else {
+			fmt.Printf("Wrong number of argument, type `cf %s -h` for help\n", args[0])
+		}
 	}
 }
 
@@ -73,8 +79,8 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 		Name: "v3_beta",
 		Version: plugin.VersionType{
 			Major: 0,
-			Minor: 6,
-			Build: 8,
+			Minor: 7,
+			Build: 0,
 		},
 		Commands: []plugin.Command{
 			{
@@ -161,6 +167,14 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 				HelpText: "cancel a task on a v3 app",
 				UsageDetails: plugin.Usage{
 					Usage: "v3-cancel-task APPNAME TASKNAME",
+				},
+			},
+			{
+				Name:     "v3-create-iso-seg",
+				Alias:    "v3-cis",
+				HelpText: "create an isolation segment",
+				UsageDetails: plugin.Usage{
+					Usage: "v3-create-iso-seg ISOSEGNAME",
 				},
 			},
 		},
