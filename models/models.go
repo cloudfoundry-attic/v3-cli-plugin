@@ -10,6 +10,10 @@ type V3AppModel struct {
 	Instances  int `json:"total_desired_instances"`
 }
 
+type V3IsolationSegmentsModel struct {
+	IsoSegs []V3IsolationSegmentModel `json:"resources"`
+}
+
 type V3IsolationSegmentModel struct {
 	Guid      string
 	Name      string
@@ -84,6 +88,16 @@ type DomainModel struct {
 	Metadata MetadataModel `json:"metadata"`
 	Entity   EntityModel   `json:"entity"`
 }
+
+type OrgsModel struct {
+	Orgs []OrgModel `json:"resources"`
+}
+
+type OrgModel struct {
+	Metadata MetadataModel `json:"metadata"`
+	Entity   EntityModel   `json:"entity"`
+}
+
 type RouteModel struct {
 	Metadata MetadataModel    `json:"metadata"`
 	Entity   RouteEntityModel `json:"entity"`
