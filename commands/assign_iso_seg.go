@@ -8,6 +8,7 @@ import (
 
 	"code.cloudfoundry.org/cli/plugin"
 	. "github.com/cloudfoundry/v3-cli-plugin/models"
+	"github.com/cloudfoundry/v3-cli-plugin/util"
 )
 
 func AssignIsolationSegment(cliConnection plugin.CliConnection, args []string) {
@@ -20,7 +21,8 @@ func AssignIsolationSegment(cliConnection plugin.CliConnection, args []string) {
 	orgs := OrgsModel{}
 	org := OrgModel{}
 	output := strings.Join(rawOutput, "")
-	json.Unmarshal([]byte(output), &orgs)
+	err := json.Unmarshal([]byte(output), &orgs)
+	util.FreakOut(err)
 
 	for _, v := range orgs.Orgs {
 		if v.Entity.Name == orgName {
@@ -40,7 +42,8 @@ func AssignIsolationSegment(cliConnection plugin.CliConnection, args []string) {
 	rawOutput, _ = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/isolation_segments?%s", urlValues.Encode()))
 	isoSegs := V3IsolationSegmentsModel{}
 	output = strings.Join(rawOutput, "")
-	json.Unmarshal([]byte(output), &isoSegs)
+	err = json.Unmarshal([]byte(output), &isoSegs)
+	util.FreakOut(err)
 
 	if len(isoSegs.IsoSegs) == 0 {
 		fmt.Printf("Isolation segment %s not found\n", isoSegName)
@@ -52,6 +55,21 @@ func AssignIsolationSegment(cliConnection plugin.CliConnection, args []string) {
 		"-X", "POST",
 		"-d", fmt.Sprintf(`'{"data": [{"guid": "%s"}]}'`, org.Metadata.Guid),
 	)
-	//check response?
+	output = strings.Join(rawOutput, "")
+	relationship := RelationshipModel{}
+	err = json.Unmarshal([]byte(output), &relationship)
+	util.FreakOut(err)
+
+	blowup := true
+	for _, v := range relationship.Data {
+		if v["guid"] == org.Metadata.Guid {
+			blowup = false
+		}
+	}
+	if blowup {
+		fmt.Println("Error assigning isolation segment to org")
+		return
+	}
+
 	fmt.Println("OK")
 }

@@ -60,6 +60,10 @@ type LinksModel struct {
 	Space LinkModel
 }
 
+type RelationshipModel struct {
+	Data []map[string]string
+}
+
 type V3PackageModel struct {
 	Guid       string
 	Error_Code string
