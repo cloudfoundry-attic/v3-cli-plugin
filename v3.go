@@ -77,6 +77,12 @@ func (v3plugin *V3Plugin) Run(cliConnection plugin.CliConnection, args []string)
 		} else {
 			fmt.Printf("Wrong number of argument, type `cf %s -h` for help\n", args[0])
 		}
+	} else if args[0] == "v3-unassign-iso-seg" {
+		if len(args) == 3 {
+			commands.UnassignIsolationSegment(cliConnection, args)
+		} else {
+			fmt.Printf("Wrong number of argument, type `cf %s -h` for help\n", args[0])
+		}
 	}
 }
 
@@ -86,7 +92,7 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 		Version: plugin.VersionType{
 			Major: 0,
 			Minor: 7,
-			Build: 1,
+			Build: 2,
 		},
 		Commands: []plugin.Command{
 			{
@@ -189,6 +195,14 @@ func (v3plugin *V3Plugin) GetMetadata() plugin.PluginMetadata {
 				HelpText: "assign an isolation segment to an organization",
 				UsageDetails: plugin.Usage{
 					Usage: "v3-assign-iso-seg ORGNAME ISOSEGNAME",
+				},
+			},
+			{
+				Name:     "v3-unassign-iso-seg",
+				Alias:    "v3-uis",
+				HelpText: "unassign an isolation segment from an organization",
+				UsageDetails: plugin.Usage{
+					Usage: "v3-unassign-iso-seg ORGNAME ISOSEGNAME",
 				},
 			},
 		},
