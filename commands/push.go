@@ -48,7 +48,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 
 	//create the app
 	rawOutput, err := cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/apps", "-X", "POST", "-d",
-		fmt.Sprintf(`{"name":"%s", "relationships": { "space": {"guid":"%s"}}, %s}`, fc.Args()[1], mySpace.Guid, lifecycle))
+		fmt.Sprintf(`{"name":"%s", "relationships": { "space": { "data": {"guid":"%s"}}}, %s}`, fc.Args()[1], mySpace.Guid, lifecycle))
 	FreakOut(err)
 	output := strings.Join(rawOutput, "")
 	app := V3AppModel{}
