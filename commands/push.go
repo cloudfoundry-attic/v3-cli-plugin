@@ -64,7 +64,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	//create package
 	pack := V3PackageModel{}
 	if dockerImage != "" {
-		request := fmt.Sprintf(`{"type": "docker", "data": {"image": %s}, "relationships": {"app":{"guid":"%s"}}}`, dockerImage, app.Guid)
+		request := fmt.Sprintf(`{"type": "docker", "data": {"image": %s}, "relationships": {"app": {"data": {"guid": "%s"}}}}`, dockerImage, app.Guid)
 		rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/packages", "-X", "POST", "-d", request)
 		FreakOut(err)
 		output = strings.Join(rawOutput, "")
@@ -75,7 +75,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 		}
 	} else {
 		//create the empty package to upload the app bits to
-		request := fmt.Sprintf(`{"type": "bits", "relationships": {"app":{"guid":"%s"}}}`, app.Guid)
+		request := fmt.Sprintf(`{"type": "bits", "relationships": {"app": {"data": {"guid": "%s"}}}}`, app.Guid)
 		rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/packages", "-X", "POST", "-d", request)
 		FreakOut(err)
 		output = strings.Join(rawOutput, "")
@@ -118,7 +118,7 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	Poll(cliConnection, fmt.Sprintf("/v3/droplets/%s", droplet.Guid), "STAGED", 10*time.Minute, "Droplet failed to stage")
 
 	//assign droplet to the app
-	rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/droplets/current", app.Guid), "-X", "PUT", "-d", fmt.Sprintf("{\"droplet_guid\":\"%s\"}", droplet.Guid))
+	rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/relationships/current_droplet", app.Guid), "-X", "PATCH", "-d", fmt.Sprintf("{\"data\": {\"guid\":\"%s\"}}", droplet.Guid))
 	FreakOut(err)
 	output = strings.Join(rawOutput, "")
 
