@@ -2,7 +2,14 @@ package models
 
 import "time"
 
+type V3Error struct {
+	Detail string `json:"detail"`
+	Title  string `json:"title"`
+	Code   int    `json:"code"`
+}
+
 type V3AppModel struct {
+	Errors []V3Error    `json:"errors"`
 	Name       string
 	Guid       string
 	Error_Code string
@@ -40,7 +47,8 @@ type V3TaskModel struct {
 }
 
 type V3AppsModel struct {
-	Apps []V3AppModel `json:"resources"`
+	Errors []V3Error    `json:"errors"`
+	Apps   []V3AppModel `json:"resources"`
 }
 
 type V3ProcessesModel struct {
@@ -65,12 +73,20 @@ type RelationshipModel struct {
 }
 
 type V3PackageModel struct {
+	Errors []V3Error    `json:"errors"`
 	Guid       string
 	Error_Code string
 }
 
 type V3DropletModel struct {
-	Guid string
+	Errors []V3Error    `json:"errors"`
+	Guid   string
+}
+
+type V3BuildModel struct {
+	Errors []V3Error    `json:"errors"`
+	Guid   string
+	Droplet V3DropletModel `json:"droplet"`
 }
 
 type MetadataModel struct {

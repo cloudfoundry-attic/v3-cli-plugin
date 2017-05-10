@@ -57,6 +57,9 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 	if app.Error_Code != "" {
 		FreakOut(errors.New("Error creating v3 app: " + app.Error_Code))
 	}
+	if len(app.Errors) > 0 {
+		FreakOut(fmt.Errorf("Error in /v3/apps: %s", app.Errors))
+	}
 	time.Sleep(2 * time.Second) // wait for app to settle before kicking off the log streamer
 	go Logs(cliConnection, args)
 	time.Sleep(2 * time.Second) // b/c sharing the cliConnection makes things break
@@ -73,6 +76,9 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 		if err != nil {
 			FreakOut(errors.New("Error creating v3 app package: " + app.Error_Code))
 		}
+		if len(pack.Errors) > 0 {
+			FreakOut(fmt.Errorf("POST /v3/packages (docker): %s", pack.Errors))
+		}
 	} else {
 		//create the empty package to upload the app bits to
 		request := fmt.Sprintf(`{"type": "bits", "relationships": {"app": {"data": {"guid": "%s"}}}}`, app.Guid)
@@ -83,6 +89,9 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 		err = json.Unmarshal([]byte(output), &pack)
 		if err != nil {
 			FreakOut(errors.New("Error creating v3 app package: " + app.Error_Code))
+		}
+		if len(pack.Errors) > 0 {
+			FreakOut(fmt.Errorf("POST /v3/packages (bits): %s", pack.Errors))
 		}
 
 		token, err := cliConnection.AccessToken()
@@ -106,16 +115,36 @@ func Push(cliConnection plugin.CliConnection, args []string) {
 		Poll(cliConnection, fmt.Sprintf("/v3/packages/%s", pack.Guid), "READY", 5*time.Minute, "Package failed to upload")
 	}
 
-	rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/packages/%s/droplets", pack.Guid), "-X", "POST", "-d", "{}")
+	buildPostRequest := fmt.Sprintf(`{ %s, "package": { "guid": "%s" }}`, lifecycle, pack.Guid)
+
+	rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", "/v3/builds", "-X", "POST", "-d", buildPostRequest)
 	FreakOut(err)
 	output = strings.Join(rawOutput, "")
-	droplet := V3DropletModel{}
-	err = json.Unmarshal([]byte(output), &droplet)
+	build := V3BuildModel{}
+	err = json.Unmarshal([]byte(output), &build)
 	if err != nil {
-		FreakOut(errors.New("error marshaling the v3 droplet: " + err.Error()))
+		FreakOut(errors.New("error marshaling the v3 build: " + err.Error()))
 	}
-	//wait for the droplet to be ready
-	Poll(cliConnection, fmt.Sprintf("/v3/droplets/%s", droplet.Guid), "STAGED", 10*time.Minute, "Droplet failed to stage")
+	if len(build.Errors) > 0 {
+		FreakOut(fmt.Errorf("Error in /v3/builds: %s (request: %s)", build.Errors, buildPostRequest))
+	}
+	//wait for the build to be ready
+	Poll(cliConnection, fmt.Sprintf("/v3/builds/%s", build.Guid), "STAGED", 10*time.Minute, "Build failed to stage")
+
+	//get the droplet from the build
+	rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/builds/%s", build.Guid))
+	FreakOut(err)
+	output = strings.Join(rawOutput, "")
+	build = V3BuildModel{}
+	err = json.Unmarshal([]byte(output), &build)
+	if err != nil {
+		FreakOut(errors.New("error marshaling the v3 build: " + err.Error()))
+	}
+	if len(build.Errors) > 0 {
+		FreakOut(fmt.Errorf("Error in /v3/builds: %s (request: %s)", build.Errors, buildPostRequest))
+	}
+	droplet := build.Droplet
+
 
 	//assign droplet to the app
 	rawOutput, err = cliConnection.CliCommandWithoutTerminalOutput("curl", fmt.Sprintf("/v3/apps/%s/relationships/current_droplet", app.Guid), "-X", "PATCH", "-d", fmt.Sprintf("{\"data\": {\"guid\":\"%s\"}}", droplet.Guid))
