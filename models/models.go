@@ -8,8 +8,14 @@ type V3Error struct {
 	Code   int    `json:"code"`
 }
 
+type V2Error struct {
+	Description string `json:"description,omitempty"`
+	ErrorCode   string `json:"error_code,omitempty"`
+	Code        int    `json:"code,omitempty"`
+}
+
 type V3AppModel struct {
-	Errors []V3Error    `json:"errors"`
+	Errors     []V3Error `json:"errors"`
 	Name       string
 	Guid       string
 	Error_Code string
@@ -73,19 +79,19 @@ type RelationshipModel struct {
 }
 
 type V3PackageModel struct {
-	Errors []V3Error    `json:"errors"`
+	Errors     []V3Error `json:"errors"`
 	Guid       string
 	Error_Code string
 }
 
 type V3DropletModel struct {
-	Errors []V3Error    `json:"errors"`
+	Errors []V3Error `json:"errors"`
 	Guid   string
 }
 
 type V3BuildModel struct {
-	Errors []V3Error    `json:"errors"`
-	Guid   string
+	Errors  []V3Error `json:"errors"`
+	Guid    string
 	Droplet V3DropletModel `json:"droplet"`
 }
 
@@ -101,6 +107,7 @@ type RouteEntityModel struct {
 }
 
 type DomainsModel struct {
+	V2Error
 	NextUrl   string        `json:"next_url,omitempty"`
 	Resources []DomainModel `json:"resources"`
 }
@@ -119,9 +126,11 @@ type OrgModel struct {
 }
 
 type RouteModel struct {
+	V2Error
 	Metadata MetadataModel    `json:"metadata"`
 	Entity   RouteEntityModel `json:"entity"`
 }
 type RoutesModel struct {
+	V2Error
 	Routes []RouteModel `json:"resources"`
 }
